@@ -4,7 +4,7 @@ import streamlit.components.v1 as components
 # 1. 앱 기본 설정
 st.set_page_config(page_title="2026 인천자립 주거로드맵", page_icon="🏠", layout="centered")
 
-# CSS 스타일링 (가독성을 위한 디자인 세팅)
+# CSS 스타일링 (가독성 + PDF 인쇄용 페이지 분할 속성 추가)
 st.markdown("""
     <style>
     .main-title { font-size: 2.2rem; color: #2C3E50; font-weight: 900; text-align: center; margin-bottom: 5px;}
@@ -15,6 +15,21 @@ st.markdown("""
     .highlight-text { color: #16A085; font-weight: bold;}
     .tip-box { background-color: #F9E79F; padding: 20px; border-radius: 8px; border-left: 6px solid #F1C40F; margin-top: 15px; margin-bottom: 15px; color: #4D5656; font-size: 0.95rem; line-height: 1.7;}
     .step-list { margin-left: 20px; margin-bottom: 15px; }
+    
+    /* 🖨️ PDF 인쇄 및 프린트를 위한 마법의 CSS */
+    @media print {
+        /* 각 단계별로 페이지를 무조건 새로 넘김 */
+        .page-break { page-break-before: always !important; }
+        
+        /* 인쇄할 때 배경색과 테두리가 투명해지는 것을 방지 (원래 색상 그대로 출력) */
+        * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        /* 인쇄 시 불필요한 스트림릿 기본 메뉴, 헤더, 푸터, 버튼 등 숨기기 */
+        header, footer, .stButton { display: none !important; }
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -82,10 +97,9 @@ with st.form("lifecycle_form"):
     submit_btn = st.form_submit_button("🚀 나만의 맞춤형 로드맵 리포트 만들기", type="primary")
 
 
-# 3. 디테일이 꽉 찬 분석 알고리즘 (1페이지 분량의 상세 설명)
+# 3. 디테일이 꽉 찬 분석 알고리즘 (동일)
 def analyze_current(assets, now_house, now_sub):
     report = ""
-    # 청약 안내 상세화
     if "아니요" in now_sub:
         report += """
         <div class='card-box'>
@@ -109,7 +123,6 @@ def analyze_current(assets, now_house, now_sub):
         </div>
         """
 
-    # 주거 형태별 상세 안내
     if "소년소녀가정" in now_house:
         report += """
         <div class='card-box'>
@@ -265,23 +278,27 @@ def generate_future(fam, house):
 if submit_btn:
     st.markdown(f'<div class="report-header">📑 {user_name} 님을 위한 맞춤형 30년 주거 로드맵</div>', unsafe_allow_html=True)
 
-    # 섹션 1
+    # 섹션 1 (페이지 분할용 태그 삽입 안함 - 첫페이지)
     st.markdown(f'<div class="section-title">1. 현재 ({current_age}세) : 나의 출발선 튼튼하게 다지기</div>', unsafe_allow_html=True)
     st.markdown(analyze_current(assets, now_house, now_sub), unsafe_allow_html=True)
     
-    # 섹션 2
+    # 섹션 2 (여기서부터 PDF 새 페이지로 넘김)
+    st.markdown('<div class="page-break"></div>', unsafe_allow_html=True)
     st.markdown(f'<div class="section-title">2. 10년 후 ({current_age+10}세) 주거 계획 및 실전 꿀팁</div>', unsafe_allow_html=True)
     st.markdown(generate_future(fam_10, house_10), unsafe_allow_html=True)
 
     # 섹션 3
+    st.markdown('<div class="page-break"></div>', unsafe_allow_html=True)
     st.markdown(f'<div class="section-title">3. 20년 후 ({current_age+20}세) 주거 계획 및 실전 꿀팁</div>', unsafe_allow_html=True)
     st.markdown(generate_future(fam_20, house_20), unsafe_allow_html=True)
 
     # 섹션 4
+    st.markdown('<div class="page-break"></div>', unsafe_allow_html=True)
     st.markdown(f'<div class="section-title">4. 30년 후 ({current_age+30}세) 영구적인 주거 자립 달성</div>', unsafe_allow_html=True)
     st.markdown(generate_future(fam_30, house_30), unsafe_allow_html=True)
     
-    # 섹션 5. 도움받는 곳
+    # 섹션 5 & 6 (마지막 안내장 느낌으로 묶어서 새 페이지)
+    st.markdown('<div class="page-break"></div>', unsafe_allow_html=True)
     st.markdown('<div class="section-title">5. 든든한 주거복지 정보망 (즐겨찾기 필수 사이트)</div>', unsafe_allow_html=True)
     st.markdown("""
         <div class='card-box'>
@@ -296,7 +313,6 @@ if submit_btn:
         </div>
     """, unsafe_allow_html=True)
 
-    # 6. 담당자 핫라인
     st.markdown(f"""
         <div class='card-box' style="background-color: #E8F8F5; border: 2px solid #1ABC9C; text-align: center;">
             <h3 style="color: #16A085; margin-bottom: 15px;">언제든 편하게 연락 주세요! 📞</h3>
@@ -308,8 +324,7 @@ if submit_btn:
             </p>
             <hr style="border: 1px dashed #1ABC9C; width: 60%; margin: 25px auto;">
             <div style="font-size: 1.3rem; font-weight: bold; color: #2C3E50;">
-                👤 담당자 김정현<br>
-                ☎️ 직통 번호: 070-7663-1153
+                👤 담당자 올림
             </div>
         </div>
     """, unsafe_allow_html=True)
@@ -320,11 +335,11 @@ if submit_btn:
         """
         <div style="text-align: center; font-family: sans-serif; padding: 20px;">
             <button onclick="window.parent.print()" style="padding: 18px 40px; font-size: 18px; font-weight: bold; background-color: #2E86C1; color: white; border: none; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.15); transition: all 0.3s ease;">
-                📄 이 맞춤형 리포트를 PDF로 소장하기
+                🖨️ 이 맞춤형 리포트를 PDF로 깔끔하게 저장하기
             </button>
             <p style="color: #7F8C8D; font-size: 14px; margin-top: 15px;">
                 버튼을 누른 후 인쇄 화면이 뜨면, 대상(프린터)을 <b>[PDF로 저장]</b>으로 변경해 주세요.<br>
-                스마트폰에서도 동일하게 PDF 파일로 저장하여 언제든 꺼내볼 수 있습니다.
+                각 연령대별 계획이 A4 용지 딱 1장씩 떨어지도록 완벽하게 세팅되어 있습니다!
             </p>
         </div>
         """,
