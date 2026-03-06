@@ -4,44 +4,46 @@ import streamlit.components.v1 as components
 # 1. 앱 기본 설정
 st.set_page_config(page_title="2026 인천자립 주거로드맵", page_icon="🏠", layout="centered")
 
-# CSS 스타일링 (가독성 및 🖨️ PDF 인쇄 시 단계별 페이지 분할 제어)
+# CSS 스타일링 (가독성 극대화 및 🖨️ PDF 전체 페이지 인쇄 완벽 제어)
 st.markdown("""
     <style>
     .main-title { font-size: 2.2rem; color: #2C3E50; font-weight: 900; text-align: center; margin-bottom: 5px;}
     .sub-title { font-size: 1.1rem; color: #7F8C8D; text-align: center; margin-bottom: 30px;}
-    .report-header { font-size: 1.7rem; color: #154360; font-weight: 800; border-bottom: 3px solid #1ABC9C; padding-bottom: 10px; margin-top: 50px; margin-bottom: 30px;}
-    .section-title { font-size: 1.5rem; color: #2C3E50; font-weight: 800; margin-top: 40px; margin-bottom: 15px;}
-    .card-box { background-color: #FFFFFF; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #E5E8E8; margin-bottom: 20px; line-height: 1.8;}
-    .highlight-text { color: #16A085; font-weight: bold;}
-    .tip-box { background-color: #F9E79F; padding: 20px; border-radius: 8px; border-left: 6px solid #F1C40F; margin-top: 15px; margin-bottom: 15px; color: #4D5656; font-size: 0.95rem; line-height: 1.7;}
-    .step-list { margin-left: 20px; margin-bottom: 15px; }
+    .report-header { font-size: 1.8rem; color: #154360; font-weight: 800; border-bottom: 3px solid #1ABC9C; padding-bottom: 10px; margin-top: 20px; margin-bottom: 30px;}
+    .section-title { font-size: 1.5rem; color: #2C3E50; font-weight: 800; margin-top: 30px; margin-bottom: 15px;}
     
-    /* 🖨️ PDF 인쇄를 위한 마법의 CSS */
+    /* 카드 박스 디자인 */
+    .card-box { background-color: #FFFFFF; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #EAECEE; margin-bottom: 20px; line-height: 1.8;}
+    
+    /* 내부 서브 박스 (실전 행동 지침 등 가독성 높이기용) */
+    .action-box { background-color: #F8F9F9; padding: 18px; border-radius: 8px; margin-top: 15px; margin-bottom: 15px; border-left: 4px solid #3498DB;}
+    
+    /* 꿀팁 박스 디자인 */
+    .tip-box { background-color: #FEF9E7; padding: 20px; border-radius: 8px; border-left: 5px solid #F1C40F; margin-top: 15px; color: #4D5656; font-size: 1rem; line-height: 1.7;}
+    
+    .step-list { margin-left: 10px; margin-bottom: 5px; margin-top: 5px; }
+    
+    /* 🖨️ PDF 전체 화면 인쇄를 위한 마법의 CSS */
     @media print {
-        /* 각 단계별로 페이지를 무조건 새로 넘김 */
-        .page-break { page-break-before: always !important; }
-        
-        /* 인쇄할 때 배경색과 테두리가 투명해지는 것을 방지 (원래 색상 그대로 출력) */
-        * {
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
+        header, footer, [data-testid="stSidebar"], [data-testid="stForm"], button { display: none !important; }
+        .main-title, .sub-title, img, hr { display: none !important; }
+        html, body, #root, .stApp, [data-testid="stAppViewContainer"], [data-testid="stMainBlockContainer"], [data-testid="stVerticalBlock"] {
+            height: auto !important; min-height: 100% !important; max-height: none !important;
+            overflow: visible !important; display: block !important; position: relative !important; background-color: white !important;
         }
-        
-        /* 인쇄 시 불필요한 스트림릿 기본 메뉴, 헤더, 푸터, 버튼 등 숨기기 */
-        header, footer, .stButton { display: none !important; }
+        .page-break { page-break-before: always !important; display: block !important; height: 0px !important; border: none !important; }
+        * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     }
     </style>
 """, unsafe_allow_html=True)
 
 st.markdown('<div class="main-title">🏠 2026 인천자립 주거로드맵</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-title">나의 속도에 맞춰 그리는 30년 맞춤형 주거 플랜 백과사전</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-title">나의 속도에 맞춰 그리는 30년 맞춤형 주거 플랜</div>', unsafe_allow_html=True)
 
 try:
-    # use_container_width=True를 사용하여 이미지가 화면 크기에 맞게 조정되도록 함
     st.image("family_illust.jpg", use_container_width=True) 
 except:
     pass
-
 st.divider()
 
 # 2. 30년 생애주기 입력 폼
@@ -64,7 +66,7 @@ current_house_options = [
 ]
 
 with st.form("lifecycle_form"):
-    st.info("💡 삶의 모습은 언제든 변할 수 있으니 너무 부담 갖지 마세요. 지금 생각하는 가장 이상적인 모습을 편안하게 골라주면 돼요!")
+    st.info("💡 삶의 모습은 언제든 변할 수 있으니 너무 부담 갖지 마세요. 편안하게 골라주면 돼요!")
     
     st.markdown("#### 📌 [현재] 출발선 확인하기")
     user_name = st.text_input("👤 이름이 무엇인가요?", "김자립")
@@ -81,252 +83,282 @@ with st.form("lifecycle_form"):
     st.markdown("---")
     st.markdown("#### 🌱 [10년 후] 주거 목표")
     fam_10 = st.selectbox("10년 후에는 몇 명과 함께 살고 싶나요?", fam_options, index=0)
-    house_10 = st.selectbox("어떤 형태의 집에서 살고 싶나요?", house_options, index=1)
-    sub_10 = st.checkbox("그때도 청약 통장을 깨지 않고 계속 유지할 수 있을까요?", value=True)
+    house_10 = st.selectbox("10년 후 어떤 형태의 집에서 살고 싶나요?", house_options, index=1)
+    sub_10 = st.checkbox("10년 후에도 청약 통장을 계속 유지할 예정이에요", value=True)
 
     st.markdown("---")
     st.markdown("#### 🏡 [20년 후] 주거 목표")
     fam_20 = st.selectbox("20년 후에는 몇 명과 함께 살고 싶나요?", fam_options, index=1)
-    house_20 = st.selectbox("어떤 형태의 집에서 살고 싶나요?", house_options, index=3)
+    house_20 = st.selectbox("20년 후 어떤 형태의 집에서 살고 싶나요?", house_options, index=3)
+    sub_20 = st.checkbox("20년 후에도 청약 통장을 계속 유지할 예정이에요", value=True)
 
     st.markdown("---")
     st.markdown("#### 🌅 [30년 후] 영구 자립 목표")
     fam_30 = st.selectbox("30년 후에는 몇 명과 함께 살고 싶나요?", fam_options, index=2)
     house_30 = st.selectbox("가장 마지막에 이루고 싶은 주거의 모습은요?", house_options, index=4)
+    sub_30 = st.checkbox("모아둔 청약 통장으로 공공분양에 도전할 예정이에요", value=True)
 
     st.write("")
     submit_btn = st.form_submit_button("🚀 나만의 맞춤형 로드맵 리포트 만들기", type="primary")
 
-
-# 3. 압도적인 디테일의 분석 알고리즘 (동일하지만 텍스트 대폭 확장)
+# 3. 분석 알고리즘 (현재 진단 - 가독성 개선)
 def analyze_current(assets, now_house, now_sub):
     report = ""
-    # 청약 안내 상세화 (A4 반 페이지 분량)
+    # 청약 피드백
     if "아니요" in now_sub:
         report += """
         <div class='card-box'>
-        🏦 <b>청약 통장, 왜 지금 바로 만들어야 할까요?</b><br>
-        지금 청약 통장이 없거나 쉬고 계시군요! 청약 통장은 단순히 돈을 모으는 적금이 아니라, <b>'아파트에 들어갈 수 있는 입장권'</b>과 같아요. 나중에 LH 아파트(건설임대)에 들어가거나 내 집 마련(공공분양)을 할 때 이 입장권이 없으면 아예 지원조차 할 수 없답니다.<br><br>
-        <ul class='step-list'>
-            <li><b>청년 전용 통장 혜택:</b> 지금 만들면 이자가 최대 4.5%로 일반 통장보다 훨씬 높은 '청년주택드림청약통장'을 만들 수 있어요.</li>
-            <li><b>돈이 없어도 OK:</b> 당장 여유가 없다면 월 2만 원씩이라도 자동이체를 넣어두세요. 나중에 공공분양은 '총액'을 보지만, 공공임대는 '넣은 횟수'가 엄청난 가산점(최대 6점)이 되어 여러분을 지켜줄 거예요.</li>
-            <li><b>전환 대출 기회:</b> 이 통장으로 당첨되면 나중에 집값의 80%를 2%대 낮은 이자로 빌려주는 전용 대출(청년주택드림대출) 기회도 생깁니다.</li>
-        </ul>
-        <div class='tip-box'>
-        <b>💡 담당자의 다정한 실무 꿀팁</b><br>
-        당장 여유가 없더라도 괜찮아요. 은행에 가서 <b>'청년주택드림청약통장'</b>을 만들어 달라고 하세요. 매월 2만 원씩이라도 자동이체를 걸어두면, 그 '횟수'가 나중에 LH 아파트에 들어갈 때 엄청난 가산점(최대 6점)이 되어 돌아올 거예요. 당장 내일, 신분증을 챙겨서 가까운 은행에 방문해 보는 건 어떨까요?
-        </div>
+            <h4 style="color:#2C3E50; margin-top:0;">🏦 청약 통장, 왜 지금 당장 만들어야 할까요?</h4>
+            지금 청약 통장이 없거나 잠시 쉬고 계시군요! 청약 통장은 단순한 적금이 아니라, 나중에 LH 아파트나 내 집 마련을 할 때 꼭 필요한 <b>'무적의 입장권'</b>과 같답니다.<br>
+            <div class='action-box'>
+                <b>📌 당장 내일 해보면 좋은 일</b>
+                <ul class='step-list'>
+                    <li>신분증을 챙겨 은행에 가서 <b>'청년주택드림청약통장'</b>을 만들어 달라고 하세요. (일반 통장보다 이자가 훨씬 높아요!)</li>
+                    <li>매월 2만 원씩이라도 자동이체를 걸어두세요. 당장 돈이 없어도 '납입 횟수'가 나중에 엄청난 가산점(최대 6점)이 된답니다.</li>
+                </ul>
+            </div>
         </div>
         """
     else:
         report += """
         <div class='card-box'>
-        🏦 <b>청약 통장 유지, 100점 만점에 200점이에요!</b><br>
-        지금처럼 연체 없이 꾸준히 넣은 횟수가 나중에 아파트에 들어갈 때 엄청난 가산점이 될 거예요. 공공분양이나 임대주택은 금액이 많은 것보다 <b>'오래, 꾸준히 낸 사람'</b>을 훨씬 좋아한답니다. 아주 잘하고 있어요!<br><br>
-        <ul class='step-list'>
-            <li><b>연체는 절대 금물:</b> 한 달 밀리면 점수 깎이는 게 아니라, 납입 회차가 늦게 인정돼서 경쟁력이 떨어져요. 꼭 자동이체를 걸어두세요.</li>
-            <li><b>급할 땐 해지 대신 대출:</b> 목돈이 급해서 해지하고 싶을 땐 절대 해지하지 말고 **'청약 담보대출'**을 받으세요. 통장을 유지하면서도 내가 넣은 돈의 90%까지 빌릴 수 있답니다. 우리의 입장권은 소중하니까요.</li>
-        </ul>
-        <div class='tip-box'>
-        <b>💡 담당자의 다정한 실무 꿀팁</b><br>
-        만약 나중에 공공분양이나 통합공공임대(넓은 평형)를 노리고 싶다면, 경제적 여유가 생기는 순간 월 납입금을 **10만 원**으로 올리는 게 좋아요. 공공분양은 한 달에 딱 10만 원까지만 '인정'해 주는데, 이 인정 총액이 많은 순서대로 뽑거든요. 횟수와 금액, 두 마리 토끼를 다 잡는 비법이랍니다.
-        </div>
+            <h4 style="color:#2C3E50; margin-top:0;">🏦 청약 통장 유지, 100점 만점에 200점이에요!</h4>
+            연체 없이 꾸준히 납입하는 습관이 나중에 아파트에 들어갈 때 가장 강력한 무기(가산점)가 될 거예요. 정말 훌륭하게 잘하고 계세요!<br>
+            <div class='action-box'>
+                <b>📌 꼭 기억해야 할 실전 지침</b>
+                <ul class='step-list'>
+                    <li>혹시라도 급하게 목돈이 필요해져도 <b>절대 통장을 해지하지 마세요!</b></li>
+                    <li>대신 은행에서 <b>'청약예금 담보대출'</b>을 받으세요. 통장 점수는 살려두고 내 돈의 90%까지 아주 싼 이자로 빌릴 수 있답니다.</li>
+                </ul>
+            </div>
         </div>
         """
 
-    # 주거 형태별 상세 안내 (A4 한 페이지 분량)
+    # 주거 피드백
     if "소년소녀가정" in now_house:
         report += """
         <div class='card-box'>
-        🏠 <b>현재 주거 상황: 소년소녀가정 전세임대 거주 중</b><br>
-        현재 살고 계신 전형은 만 20세까지 나라에서 전세지원금에 대한 이자를 전액 면제해 주는 최고의 혜택을 가지고 있어요. 주거비 걱정 없이 학업이나 일에 집중할 수 있는 아주 소중한 시기랍니다.<br><br>
-        <ul class='step-list'>
-            <li><b>주의할 점 (전환 대비):</b> 만 22세 이후부터는 전세금에 대한 소정의 임대료(이자, 약 1~2% 수준)를 매달 납부해야 해요.</li>
-            <li><b>실제 권리분석 실습:</b> 전세임대는 내가 원하는 민간 주택을 LH가 대신 계약해 주는 제도예요. 집주인이 빚이 많으면 나중에 보증금을 떼일 수 있어서, LH는 아주 깐깐한 심사를 합니다. 이걸 '권리분석'이라고 해요.<br>
-                👉 **(집주인 빚 + 내 보증금)이 주택 가격의 90%를 넘으면 안 돼요!**<br>
-                예를 들어 2억짜리 집인데 집주인 빚이 1억 9천이면 안 됩니다. 우리의 소중한 보증금을 지키기 위한 첫 번째 관문이죠.</li>
-            <li><b>준비할 점:</b> 주거비가 전혀 나가지 않는 지금 시기에, 나중에 낼 이자나 독립 자금을 위해 매월 10~20만 원씩은 꼭 없는 돈이라 생각하고 저축해 두는 것을 강력히 추천해요.</li>
-        </ul>
-        <div class='tip-box'>
-        <b>💡 담당자의 다정한 실무 꿀팁</b><br>
-        지원 한도(수도권 약 1.2억 원) 안에서 이사할 일이 생기면, 꼭 도배/장판 지원금 혜택(1회 약 60만 원 한도)을 신청하세요. 쾌적한 환경에서 지내는 것도 자립의 중요한 부분이랍니다.
-        </div>
+            <h4 style="color:#2C3E50; margin-top:0;">🏠 현재 주거: 소년소녀가정 전세임대</h4>
+            만 20세까지 전세 이자가 '전액 면제'되는 최고의 혜택을 받고 계시네요. 주거비 걱정 없이 온전히 나에게만 집중할 수 있는 소중한 시기랍니다.<br>
+            <div class='tip-box'>
+                <b>💡 멘토의 다정한 실전 꿀팁</b><br>
+                만 22세 이후부터는 조금씩 임대료(이자)를 내야 해요. 주거비가 0원인 지금, 나중에 낼 이자나 독립 자금을 위해 매월 10만 원씩은 없는 돈이라 생각하고 꼭 저축해 두는 것을 추천해요! (도배나 장판이 낡았다면 LH 지원금 혜택도 꼭 챙기세요.)
+            </div>
         </div>
         """
     elif "자립준비청년" in now_house:
         report += f"""
         <div class='card-box'>
-        🏠 <b>현재 주거 상황: 자립준비청년 전세/매입임대 거주 중</b><br>
-        보호가 종료된 후 5년 동안 임대료를 50%나 할인받고 계시군요! 정말 현명한 선택을 하셨어요. 지금은 주거 안정이 든든하게 받쳐주고 있으니, 이제는 다가올 미래를 준비할 타이밍이에요.<br><br>
-        <ul class='step-list'>
-            <li><b>특례 종료 대비:</b> 5년이라는 혜택 기간이 끝나면, 일반 청년 전형으로 바뀌면서 임대료가 원래대로 100% 청구될 거예요. 체감상 월세가 두 배로 뛰는 느낌이 들 수 있어요.</li>
-            <li><b>보증금 전환의 마법:</b> 이 충격을 줄이기 위해 지금 모아두신 {assets}만 원을 잘 활용할 수 있어요.</li>
-        </ul>
-        <div class='tip-box'>
-        <b>💡 담당자의 다정한 실무 꿀팁 (전환보증금)</b><br>
-        LH에는 <b>'전환보증금 제도'</b>라는 마법 같은 제도가 있어요. 여유 자금을 보증금으로 추가 납부하면, 무려 연 6~7%의 이율로 계산해서 매월 내는 월세를 확 깎아준답니다. 예를 들어 200만 원을 추가로 넣으면 월세가 만 원 넘게 줄어들어요! 은행 예금 이자보다 훨씬 높은 수익률이니, 목돈이 생길 때마다 보증금으로 전환해서 월세를 '치킨 한 마리 값'으로 만들어 보세요!
-        </div>
+            <h4 style="color:#2C3E50; margin-top:0;">🏠 현재 주거: 자립준비청년 임대주택</h4>
+            보호 종료 후 5년 동안 임대료 50% 할인 혜택을 받으며 주거 안정을 이루셨군요! 아주 현명한 선택이에요.<br>
+            <div class='tip-box'>
+                <b>💡 멘토의 다정한 실전 꿀팁 (전환보증금)</b><br>
+                5년이 지나면 할인이 끝나서 월세가 오를 거예요. 이때를 대비해 LH의 <b>'전환보증금 제도'</b>를 꼭 활용해 보세요! 여유 자금({assets}만 원 등)을 보증금으로 추가 납부하면 연 6~7% 이율로 계산해서 매월 내는 월세를 치킨 한 마리 값으로 뚝 떨어뜨릴 수 있답니다!
+            </div>
         </div>
         """
     elif "무상거주" in now_house:
         report += """
         <div class='card-box'>
-        🏠 <b>현재 주거 상황: 무상거주 (시설/친척집/지인 등)</b><br>
-        매달 나가는 고정적인 집세(월세, 관리비 등)가 없는 지금이 바로 여러분의 인생에서 <b>'종잣돈을 모을 수 있는 절대적인 골든타임'</b>이에요! 이 시기를 어떻게 보내느냐에 따라 10년 뒤의 모습이 완전히 달라질 수 있어요.<br><br>
-        <ul class='step-list'>
-            <li><b>자금 묶어두기:</b> 자립정착금이나 자립수당 등 들어오는 목돈은 절대 쉽게 꺼내 쓸 수 없도록 '청년도약계좌'나 적금에 단단히 묶어두는 것을 추천해요.</li>
-            <li><b>독립 준비:</b> 무상거주 기간 동안 자립준비청년 1순위 자격을 잘 아껴두었다가, 확실하게 독립할 준비가 되었을 때 LH 매입임대나 전세임대로 안전하게 첫발을 내딛어 보아요.</li>
-        </ul>
+            <h4 style="color:#2C3E50; margin-top:0;">🏠 현재 주거: 무상거주 (시설/지인 등)</h4>
+            고정적으로 나가는 집세(월세 등)가 없는 지금이 바로 <b>'종잣돈을 모을 수 있는 절대적인 골든타임'</b>이에요!<br>
+            <div class='tip-box'>
+                <b>💡 멘토의 다정한 실전 꿀팁</b><br>
+                자립정착금 등 큰돈은 절대 기분 따라 쓰지 말고 '청년도약계좌'에 단단히 묶어두세요. 그리고 급하게 나갈 이유가 없다면, 여러분이 가진 <b>'자립준비청년 1순위 자격'</b>을 아껴두었다가 나중에 진짜 좋은 LH 임대주택이 나왔을 때 무기로 사용하세요!
+            </div>
         </div>
         """
     elif "일반 민간 임대" in now_house:
         report += """
         <div class='card-box'>
-        🏠 <b>현재 주거 상황: 일반 민간 임대 (월세/전세)</b><br>
-        개인적으로 집을 구해서 지내고 계시군요. 훌륭한 독립이지만, 매달 나가는 높은 월세나 전세 대출 이자는 우리가 자산을 모으는 데 가장 큰 적이 될 수 있어요. 게다가 요즘은 전세사기 같은 위험도 무시할 수 없잖아요.<br><br>
-        <div class='tip-box'>
-        <b>💡 담당자의 다정한 실무 꿀팁</b><br>
-        여러분에게는 일반인들보다 훨씬 유리하게, 보증금 100만 원 수준으로도 들어갈 수 있는 <b>'LH 자립준비청년 1순위 전형'</b>이라는 강력한 카드가 있어요! 비싼 월세로 돈이 새어나가지 않도록, 담당자와 함께 LH 주택으로 이사 갈 방법을 지금 당장 긍정적으로 검토해 보길 진심으로 권장해요. 우리의 종잣돈은 민간 주택 월세로 쓰기엔 너무 아깝잖아요!
-        </div>
+            <h4 style="color:#2C3E50; margin-top:0;">🏠 현재 주거: 일반 민간 임대 (월세/전세)</h4>
+            훌륭하게 독립하셨지만, 매달 나가는 비싼 월세와 전세사기 위험은 자산을 모으는 데 큰 방해가 될 수 있어요.<br>
+            <div class='tip-box'>
+                <b>💡 멘토의 다정한 실전 꿀팁</b><br>
+                여러분에게는 일반 청년들보다 훨씬 적은 돈(보증금 100만 원 선)으로 좋은 집에 갈 수 있는 <b>'LH 자립준비청년 1순위 전형'</b>이라는 막강한 방패가 있어요! 아까운 내 돈이 월세로 사라지지 않도록, 담당자와 함께 LH 주택으로 이사 갈 방법을 지금 긍정적으로 검토해 보세요.
+            </div>
         </div>
         """
     elif "주거취약계층" in now_house:
         report += """
         <div class='card-box'>
-        🏠 <b>현재 주거 상황: 고시원 등 주거취약계층 거주 중</b><br>
-        지금 지내는 곳이 답답하거나 마음이 쓰이시죠? 무엇보다 여러분의 안전과 따뜻한 잠자리가 가장 중요해요. 혼자서 "내 힘으로 다 해결해야 해"라고 부담 갖지 마세요.<br><br>
-        <div class='tip-box'>
-        <b>💡 담당자의 다정한 실무 꿀팁</b><br>
-        정부에는 <b>'주거취약계층 주거상향 지원사업'</b>이라는 아주 좋은 제도가 있어요. 고시원이나 여관 등에 거주하는 분들이 보증금 부담 없이 안전한 공공임대주택으로 이사할 수 있도록 이사비부터 생필품, 보증금까지 싹 다 지원해 주는 제도랍니다. 이 글을 읽으셨다면 망설이지 말고 꼭! 저에게(담당자) 연락해서 도움을 받아보세요.
-        </div>
+            <h4 style="color:#2C3E50; margin-top:0;">🏠 현재 주거: 고시원 등 주거취약계층</h4>
+            지금 지내는 곳이 많이 답답하시죠? 무엇보다 여러분의 일상에서는 '안전하고 따뜻한 잠자리'가 가장 중요해요.<br>
+            <div class='tip-box'>
+                <b>💡 멘토의 다정한 실전 꿀팁</b><br>
+                혼자 버티지 마세요. <b>'주거취약계층 주거상향 지원사업'</b>을 통해 보증금, 이사비, 필수 가전제품까지 모두 지원받으며 쾌적한 공공임대주택으로 이사할 수 있어요! 이 글을 보셨다면 편하게 멘토에게 연락해서 꼭 도움을 받아보세요.
+            </div>
         </div>
         """
-    
     return report
 
-def generate_future(fam, house):
-    report = f"<div class='card-box'>👨‍👩‍👧‍👦 <b>목표 가구 구성:</b> {fam}<br>🏡 <b>목표 주거 전형:</b> {house}</div>"
+# 4. 분석 알고리즘 (미래 로드맵 - 가독성 및 디자인 강화)
+def generate_future(age, fam, house, sub_status=True):
+    report = f"""
+    <div class='card-box' style='background-color:#EBF5FB; border-left: 6px solid #2980B9;'>
+        <b style='font-size:1.1rem;'>👨‍👩‍👧‍👦 목표 가구 구성:</b> {fam}<br>
+        <b style='font-size:1.1rem;'>🏡 목표 주거 전형:</b> {house}
+    </div>
+    """
     
+    if not sub_status:
+        report += """
+        <div class='action-box' style='border-left-color: #E74C3C;'>
+            <b style='color:#C0392B;'>⚠️ 앗, 청약 납입을 잠시 쉬시려고요?</b><br>
+            경제적으로 힘들 땐 멈출 수 있지만, 청약 통장의 생명력이 멈추면 나중에 아파트 경쟁에서 순위가 밀릴 수 있어요. 여유가 생기는 순간 꼭 월 2만 원씩이라도 다시 이어나가 보기를 다정하게 권유해 드려요!
+        </div>
+        """
+
     if "전세임대" in house:
-        report += """
+        title = f"🔎 {age}세 맞춤 전세임대 공략법"
+        desc = "내가 살고 싶은 동네의 맘에 드는 집을 직접 찾아오면, LH가 집주인과 대신 전세계약을 맺고 저렴하게 빌려주는 아주 자유로운 제도랍니다."
+            
+        report += f"""
         <div class='card-box'>
-            <b>🔎 전세임대 완벽 정복 - 부채비율 계산법 실습 (A4 반 페이지 분량)</b><br>
-            전세임대는 내가 살고 싶은 동네의 집을 직접 찾아오면, LH가 집주인과 전세계약을 맺고 나에게 다시 저렴하게 재임대해 주는 아주 유연한 제도예요.<br><br>
-            <ul class='step-list'>
-                <li><b>신청 시기:</b> 보통 **1월~2월 연초**에 모집 공고가 한꺼번에 쏟아지니 이때 LH청약플러스 앱을 꼭 확인하세요.</li>
-                <li><b>지원 한도:</b> 수도권 기준 약 1.2억 원~1.5억 원까지 지원해 주며, 여러분은 지원받는 금액의 딱 **5%** 정도만 보증금으로 준비하면 돼요.</li>
-            </ul>
+            <h4 style="color:#2C3E50; margin-top:0;">{title}</h4>
+            <p>{desc}</p>
+            <div class='action-box'>
+                <b>📌 이것만은 꼭 준비하세요!</b>
+                <ul class='step-list'>
+                    <li><b>공고 확인:</b> 주로 <b>1~2월 연초</b>에 모집이 쏟아지니 LH청약플러스를 꼭 확인하세요.</li>
+                    <li><b>비용 준비:</b> 수도권 기준 약 1.2~1.5억을 지원해주니, 내 돈은 그 금액의 <b>5%</b>만 준비하면 돼요.</li>
+                </ul>
+            </div>
             <div class='tip-box'>
-            <b>💡 담당자가 알려주는 부채비율 90% 계산 꿀팁</b><br>
-            LH는 우리의 보증금을 지키기 위해 정말 깐깐한 심사를 해요. 집주인이 은행에 빚이 많으면 심사에서 가차 없이 탈락시킵니다. 이걸 '권리분석'이라고 불러요.<br>
-            👉 **절대 원칙: (집주인 빚 + 내 보증금)이 주택 가격의 90%를 넘으면 안 돼요!**<br>
-            그러니 부동산에 가서 집을 찾을 때 처음부터 당당하게 말씀하세요. *“사장님, 저 LH 전세임대로 구하고 있어요. 부채비율 90% 이하로 권리분석 무조건 통과할 수 있는 융자 없는 깨끗한 집만 보여주세요!”* 이렇게 말하면 시간 낭비를 확 줄일 수 있답니다.
+                <b>💡 멘토의 권리분석(안전한 집 찾기) 비밀 무기</b><br>
+                부동산에 가서 이것저것 보지 말고 딱 이렇게 당당하게 말씀하세요!<br>
+                <i>"사장님, 저 LH 전세임대 구하는데요, <b>부채비율 90% 이하로 권리분석 무조건 통과할 수 있는 깨끗한 집</b>만 보여주세요!"</i><br>
+                (※ 집주인 빚과 내 보증금을 합친 돈이 집값의 90%를 넘으면 LH가 계약을 안 해줍니다.)
             </div>
         </div>
         """
+        
     elif "매입임대" in house:
-        report += """
+        title = f"🔎 {age}세 맞춤 매입임대 공략법"
+        desc = "LH가 도심 곳곳의 튼튼한 빌라나 오피스텔을 통째로 사들여서 시세보다 훨씬 싸게 빌려주는 제도예요. 집주인이 '국가'라 전세사기 걱정이 0%랍니다!"
+
+        report += f"""
         <div class='card-box'>
-            <b>🔎 매입임대 입지 꿀팁 - 인천 지역별 특징 분석 (A4 반 페이지 분량)</b><br>
-            LH가 튼튼하게 지어진 빌라나 오피스텔을 통째로 사들여서 우리에게 저렴하게 빌려주는 제도예요. 집주인이 국가라서 전세사기 걱정은 0%랍니다!<br><br>
-            <ul class='step-list'>
-                <li><b>신청 시기:</b> 보통 **3월, 6월, 9월, 12월 분기별**로 크게 정기 모집 공고가 올라와요.</li>
-                <li><b>초기 비용 0원 가깝게:</b> 1순위 자격이라면 보증금 단돈 100만 원으로 입주가 가능하고, 냉장고나 세탁기 같은 기본 옵션이 갖춰진 곳도 많아 초기 비용을 아끼기 너무 좋아요.</li>
-            </ul>
+            <h4 style="color:#2C3E50; margin-top:0;">{title}</h4>
+            <p>{desc}</p>
+            <div class='action-box'>
+                <b>📌 이것만은 꼭 준비하세요!</b>
+                <ul class='step-list'>
+                    <li><b>공고 확인:</b> <b>3, 6, 9, 12월 분기별</b>로 정기 공고가 크게 올라와요.</li>
+                    <li><b>초기 비용 절약:</b> 냉장고, 세탁기 등 풀옵션이 갖춰진 곳이 많아 이사 비용을 아끼기 좋아요.</li>
+                </ul>
+            </div>
             <div class='tip-box'>
-            <b>💡 담당자가 알려주는 인천 지역별 입지 꿀팁</b><br>
-            1. **계양구/부평구:** 서울 출퇴근이 편리하고 생활 인프라가 이미 완벽하게 갖춰져 있어요. (경쟁률이 조금 높은 편이에요.)<br>
-            2. **남동구(논현):** 소래포구역 등 교통이 편리하고 주거 환경이 쾌적해요. (깨끗한 신축급 빌라가 많이 나와요.)<br>
-            3. **서구(검단/청라):** 새로 짓는 새 오피스텔이나 빌라 입주 기회가 많아요. (가끔 주위 상권이 덜 갖춰진 곳도 있으니 꼭 임장을 가봐야 해요.)<br>
-            반드시 스마트폰에 **'LH청약플러스' 앱**을 깔고 마이페이지에서 [관심지역 알림]을 꼭 켜두세요!
+                <b>💡 멘토의 '관심지역 알림'과 '줍줍' 비밀 무기</b><br>
+                당첨자가 포기해서 남는 빈집 공고(수시모집)가 매주 금요일 오후에 조용히 올라옵니다.<br>
+                👉 <b>스마트폰 'LH청약플러스' 앱 마이페이지에서 [관심지역 알림]을 '인천'으로 켜두세요!</b> 알람이 울리면 남들보다 빠르게 빈집을 낚아챌 수 있는 최고의 비법이에요.
             </div>
         </div>
         """
+        
     elif "건설임대" in house:
+        title = f"🔎 {age}세 맞춤 아파트(건설임대) 공략법"
+        desc = "새로 지어지는 대단지 아파트에 입주할 기회예요. 경비실, 헬스장 등 생활 인프라가 훌륭하고 소득 요건만 유지하면 최장 30년까지 이사 안 가고 살 수 있어요."
+
         report += f"""
         <div class='card-box'>
-            <b>🔎 건설임대 가점표 관리 - 100회 납입 챌린지 전략 (A4 반 페이지 분량)</b><br>
-            새로 지어지는 깨끗한 단지형 아파트에 입주할 수 있는 기회예요. 단지 안에 경비실도 있고 놀이터도 있어서 매우 안전하고 쾌적하죠.<br><br>
-            <ul class='step-list'>
-                <li><b>면적 제한 확인:</b> 아주 중요한 부분이에요! 혼자 사는 1인 가구는 전용면적 **40㎡ 이하**의 소형 평수만 지원할 수 있어요. 넓은 평수에 무작정 지원하면 서류에서 바로 탈락하니 꼭 {fam} 기준에 맞는 평수를 지원하셔야 해요!</li>
-                <li><b>거주 기간:</b> 국민임대의 경우 최장 30년까지 이사 걱정 없이 안심하고 거주할 수 있는 완벽한 베이스캠프예요.</li>
-            </ul>
+            <h4 style="color:#2C3E50; margin-top:0;">{title}</h4>
+            <p>{desc}</p>
+            <div class='action-box'>
+                <b>📌 면적 제한 (매우 중요!)</b>
+                <ul class='step-list'>
+                    <li>1인 가구는 전용면적 <b>40㎡ 이하</b>만 지원할 수 있어요. 평수가 크다고 무작정 지원하면 서류에서 100% 탈락하니 꼭 {fam} 기준에 맞는 평수를 선택하세요.</li>
+                </ul>
+            </div>
             <div class='tip-box'>
-            <b>💡 담당자가 알려주는 '배점표(가산점)' 만점받기 꿀팁</b><br>
-            아파트는 1순위 안에서도 점수(배점)로 줄을 세워요. 여기서 이기는 두 가지 핵심 무기를 알려드릴게요.<br>
-            1. **인천 거주 기간:** 인천광역시에 주소지를 두고 오래 살수록 유리해요. (이사 갈 일이 없더라도 전입신고는 맘대로 옮기지 마세요!)<br>
-            2. **청약 통장 납입 횟수:** 돈의 액수보다 '얼마나 연체 없이 꾸준히 냈는지'가 중요해요. **60회 이상** 꾸준히 내면 여기서 최고점을 받을 수 있답니다.
+                <b>💡 멘토의 '배점표' 만점받기 비밀 무기</b><br>
+                치열한 아파트 경쟁에서 이기려면 딱 두 가지만 관리하세요!<br>
+                1. <b>인천 연속 거주 기간:</b> 이사 갈 일이 없다면 전입신고는 타 지역으로 옮기지 마세요.<br>
+                2. <b>청약 납입 횟수:</b> 통장에 돈이 많은 것보다 <b>'연체 없이 60회(5년) 이상 꾸준히 냈는지'</b>가 가장 중요해요!
             </div>
         </div>
         """
+        
     elif "통합공공" in house:
+        title = f"🔎 {age}세 맞춤 통합공공임대 공략법"
+        desc = "2026년 최신 주거복지의 끝판왕 제도예요. 내 월급이 오르더라도 쫓겨나지 않고 소득에 맞춰 임대료만 내며 30년 동안 마음 편히 살 수 있어요."
+
         report += f"""
         <div class='card-box'>
-        <b>🔎 통합공공임대 소득연계형 임대료와 넓은 평형 전략 (A4 반 페이지 분량)</b><br>
-            복잡했던 여러 임대주택 제도를 하나로 합친 2026년 최신 버전의 주거복지 끝판왕 제도예요.<br><br>
-            <ul class='step-list'>
-                <li><b>소득 연계형 임대료:</b> 통합공공임대의 가장 큰 매력은 소득이 올라가면 쫓겨나지 않고, 소득에 맞춰 임대료만 조금 더 내며 계속 살 수 있다는 점이에요! 최장 30년까지 안심하고 살 수 있죠.</li>
-                <li><b>평형 선택의 자유:</b> 기존 임대주택은 좁은 집만 갈 수 있었지만, 통합공공임대는 {fam}의 인원수에 맞춰서 최대 84㎡(약 34평형) 아파트까지 지원할 수 있어서 주거 환경이 획기적으로 좋아져요.</li>
-            </ul>
+            <h4 style="color:#2C3E50; margin-top:0;">{title}</h4>
+            <p>{desc}</p>
+            <div class='action-box'>
+                <b>📌 이것만은 꼭 준비하세요!</b>
+                <ul class='step-list'>
+                    <li><b>평형의 자유:</b> {fam}의 인원수에 맞춰 최대 84㎡(약 34평형) 아파트까지 당당하게 지원할 수 있어요.</li>
+                </ul>
+            </div>
             <div class='tip-box'>
-            <b>💡 담당자가 알려주는 가구 구성원 수 전략</b><br>
-            앞으로 검단신도시나 계양신도시 같은 새로운 동네에서 새 아파트 공고가 수시로 쏟아질 예정이에요. {fam}가 되면 면적 우선 공급에서 훨씬 유리해지니, 무주택 세대 요건을 잘 유지하면서 꾸준히 공고를 모니터링해 보아요.
+                <b>💡 멘토의 신도시 청약 비밀 무기</b><br>
+                검단신도시나 계양신도시 같은 쾌적한 새 동네에서 신규 아파트 공고가 쏟아질 거예요. 특히 맞벌이나 다자녀 가정이 될수록 가산점을 듬뿍 받으니, 마이홈포털에서 공고를 꾸준히 모니터링하는 걸 추천해요!
             </div>
         </div>
         """
+        
     elif "분양" in house:
+        title = f"🔎 {age}세 공공분양(뉴홈) 내 집 마련 공략법"
+        desc = "로드맵의 멋진 종착지네요! 주변 아파트 시세의 70% 수준으로 새 아파트를 분양받아 나만의 온전한 집을 가질 수 있는 기회예요."
+
         report += f"""
         <div class='card-box'>
-        <b>🔎 공공분양 '뉴홈' 특별공급과 DSR 신용관리 전략 (A4 반 페이지 분량)</b><br>
-            30년 로드맵의 마지막 종착지네요! LH의 '뉴홈' 브랜드를 통해 주변 아파트 시세의 70% 수준으로 저렴하게 분양받아 내 집 마련의 꿈을 이루는 단계예요.<br><br>
-            <ul class='step-list'>
-                <li><b>특별공급(특공) 절대 공략:</b> 일반 사람들과 경쟁하기엔 너무 치열해요. 우리는 {fam} 상황에 꼭 맞춰서 '생애최초 특공', '신혼부부 특공', '다자녀 특공'이라는 마법의 문을 두드릴 거예요. 전체 분양 물량의 무려 70%가 특공에 배정되어 있답니다!</li>
-            </ul>
+            <h4 style="color:#2C3E50; margin-top:0;">{title}</h4>
+            <p>{desc}</p>
+            <div class='action-box'>
+                <b>📌 특별공급(특공) 필수 공략!</b>
+                <ul class='step-list'>
+                    <li>일반 경쟁은 너무 치열해요. 전체 물량의 70%를 차지하는 <b>'생애최초, 신혼부부, 다자녀 특공'</b>이라는 덜 막히는 문을 집중적으로 두드리세요!</li>
+                </ul>
+            </div>
             <div class='tip-box'>
-            <b>💡 담당자가 알려주는 DSR 신용관리와 대출 준비 꿀팁</b><br>
-            1. **청약 인정 금액:** 분양 당첨은 횟수가 아니라 통장에 **'총 납입 인정 금액'**이 많은 순서대로 뽑아요. 단, 한 달에 딱 10만 원까지만 인정해 줍니다. 경제적 여유가 생기는 순간, 청약 자동이체를 월 10만 원으로 올려두는 것이 좋아요.<br>
-            2. **신용점수 철통 방어:** 당첨이 끝이 아니에요! 집값의 80%를 빌려주는 정부의 아주 싼 대출(모기지)을 받으려면 신용점수가 좋아야 해요. **신용카드 현금서비스, 리볼빙, 잦은 카드론 사용**은 대출 심사(DSR)에서 치명적이니 20대부터 신용 관리에 꼭 신경 써주세요!
+                <b>💡 멘토의 DSR 신용관리와 대출 비밀 무기</b><br>
+                1. <b>월 10만 원 납입:</b> 분양 당첨은 청약 통장에 <b>'월 최대 10만 원씩 누적된 총 금액'</b>으로 뽑아요. 여유가 생기면 무조건 납입금을 10만 원으로 올려두세요.<br>
+                2. <b>신용점수 철통 방어:</b> 당첨 후 집값의 80%를 빌려주는 싼 대출(모기지)을 받으려면 신용점수가 필수예요. <b>잦은 현금서비스나 카드론</b>은 절대 금물입니다!
             </div>
         </div>
         """
     return report
 
-# 4. 리포트 출력 및 귀여운 캐릭터 PDF 버튼
+# 5. 리포트 출력 및 PDF 버튼
 if submit_btn:
-    st.markdown(f'<div class="report-header">📑 {user_name} 님을 위한 맞춤형 30년 주거 로드맵</div>', unsafe_allow_html=True)
+    st.markdown('<div class="report-header">📑 나만을 위한 맞춤형 30년 주거 로드맵</div>', unsafe_allow_html=True)
 
-    # 섹션 1 (현재) - 이 내용부터 인쇄 1페이지 시작
+    # 섹션 1 (현재)
     st.markdown(f'<div class="section-title">1. 현재 ({current_age}세) : 나의 출발선 튼튼하게 다지기</div>', unsafe_allow_html=True)
     st.markdown(analyze_current(assets, now_house, now_sub), unsafe_allow_html=True)
     
-    # 섹션 2 (10년 후) - 여기서부터 PDF 2페이지로 넘어감
+    # 섹션 2 (10년 후)
     st.markdown('<div class="page-break"></div>', unsafe_allow_html=True)
     st.markdown(f'<div class="section-title">2. 10년 후 ({current_age+10}세) 주거 계획 및 실전 꿀팁</div>', unsafe_allow_html=True)
-    st.markdown(generate_future(fam_10, house_10), unsafe_allow_html=True)
+    st.markdown(generate_future(current_age+10, fam_10, house_10, sub_10), unsafe_allow_html=True)
 
-    # 섹션 3 (20년 후) - 여기서부터 PDF 3페이지로 넘어감
+    # 섹션 3 (20년 후)
     st.markdown('<div class="page-break"></div>', unsafe_allow_html=True)
     st.markdown(f'<div class="section-title">3. 20년 후 ({current_age+20}세) 주거 계획 및 실전 꿀팁</div>', unsafe_allow_html=True)
-    st.markdown(generate_future(fam_20, house_20), unsafe_allow_html=True)
+    st.markdown(generate_future(current_age+20, fam_20, house_20, sub_20), unsafe_allow_html=True)
 
-    # 섹션 4 (30년 후) - 여기서부터 PDF 4페이지로 넘어감
+    # 섹션 4 (30년 후)
     st.markdown('<div class="page-break"></div>', unsafe_allow_html=True)
     st.markdown(f'<div class="section-title">4. 30년 후 ({current_age+30}세) 영구적인 주거 자립 달성</div>', unsafe_allow_html=True)
-    st.markdown(generate_future(fam_30, house_30), unsafe_allow_html=True)
+    st.markdown(generate_future(current_age+30, fam_30, house_30, sub_30), unsafe_allow_html=True)
     
-    # 섹션 5 & 6 (도움망 및 편지) - 여기서부터 PDF 5페이지 (마지막 장)
+    # 섹션 5 (도움망 및 연락처)
     st.markdown('<div class="page-break"></div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-title">5. 든든한 주거복지 정보망 (즐겨찾기 필수 사이트)</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">5. 든든한 주거복지 정보망 및 멘토의 편지</div>', unsafe_allow_html=True)
     st.markdown("""
         <div class='card-box'>
-        <b>1️⃣ LH 청약플러스 (https://apply.lh.or.kr/)</b><br>
-        실제 집 공고를 보고 청약을 신청하는 공식 사이트예요. 앱을 꼭 다운로드하시고 '관심지역(인천) 알림'을 켜두는 것을 강력히 추천해요.<br><br>
-        <b>2️⃣ 마이홈 포털 (https://www.myhome.go.kr/)</b><br>
-        전국 모든 종류의 주거복지 제도를 한눈에 보여주는 길잡이 곳이에요. '자가진단' 메뉴를 누르면 내 나이와 소득에 딱 맞는 제도를 컴퓨터가 알아서 찾아준답니다.<br><br>
-        <b>3️⃣ 자립정보ON (https://jaripon.ncrc.or.kr/)</b><br>
-        자립준비청년들만을 위해 주거뿐만 아니라 장학금, 금융, 취업 정보까지 모두 모아둔 정말 유용한 전용 포털이에요. 자주 들어가 볼수록 돈이 되는 정보가 가득해요.<br><br>
-        <b>4️⃣ 주택도시기금 (https://nhuf.molit.go.kr/)</b><br>
-        나중에 전셋집을 구하거나 집을 살 때, 이자가 아주 저렴한 나라의 대출 상품(청년전용 버팀목, 디딤돌 대출 등)을 알아볼 수 있는 공식 창구랍니다.
+        <b>1️⃣ LH 청약플러스 (<a href="https://apply.lh.or.kr/" target="_blank" style="color:#2980B9; text-decoration:none;">바로가기👆</a>)</b><br>
+        실제 집 공고를 보고 신청하는 곳! 스마트폰에 앱을 깔고 '관심지역 알림'을 꼭 켜두세요.<br><br>
+        <b>2️⃣ 마이홈 포털 (<a href="https://www.myhome.go.kr/" target="_blank" style="color:#2980B9; text-decoration:none;">바로가기👆</a>)</b><br>
+        '자가진단' 메뉴를 누르면 내 나이와 소득에 딱 맞는 제도를 알아서 찾아줍니다.<br><br>
+        <b>3️⃣ 자립정보ON (<a href="https://jaripon.ncrc.or.kr/" target="_blank" style="color:#2980B9; text-decoration:none;">바로가기👆</a>)</b><br>
+        자립준비청년들만을 위한 주거, 금융, 취업 정보가 가득한 전용 포털입니다.<br><br>
+        <b>4️⃣ 주택도시기금 (<a href="https://nhuf.molit.go.kr/" target="_blank" style="color:#2980B9; text-decoration:none;">바로가기👆</a>)</b><br>
+        이자가 아주 저렴한 나라의 대출 상품(버팀목, 디딤돌 등)을 알아볼 수 있는 공식 창구입니다.
         </div>
     """, unsafe_allow_html=True)
 
@@ -335,59 +367,25 @@ if submit_btn:
             <h3 style="color: #16A085; margin-bottom: 15px;">언제든 편하게 연락 주세요! 📞</h3>
             <p style="color: #34495E; font-size: 1.15rem; margin-bottom: 0px; line-height: 1.8;">
                 사람마다 처한 상황이 다르고, 세워둔 계획은 살면서 언제든 변할 수 있어요.<br>
-                단순히 공고를 기다리기보다는 미리 요건을 차근차근 준비하는 것이 좋은 결과를 얻는 가장 빠른 지름길입니다.<br><br>
                 이 로드맵을 보다가 어려운 말이 있거나, 내 상황에 맞게 계획을 조금 수정하고 싶다면 <b>절대 혼자 고민하지 마세요.</b><br>
                 당신의 든든한 내 편이 되어 언제든 함께 길을 찾아 줄게요.
             </p>
             <hr style="border: 1px dashed #1ABC9C; width: 60%; margin: 25px auto;">
             <div style="font-size: 1.3rem; font-weight: bold; color: #2C3E50;">
-                👤 담당자 올림
+                👤 담당 김정현(070-7663-1153)
             </div>
         </div>
     """, unsafe_allow_html=True)
 
-    # 5단계 꿀팁 대폭 확장 (A4 꽉꽉 채움)
-    st.markdown('<div class="page-break"></div>', unsafe_allow_html=True)
-    st.markdown('<div class="report-header">🎁 담당자가 주는 마지막 특급 주거 꿀팁 종합 세트</div>', unsafe_allow_html=True)
-    st.markdown("""
-        <div class='card-box'>
-        <b>[1단계. 종잣돈 모으기 대작전]</b><br>
-        1. **자립정착금은 절대 쓰지 마세요:** 시도별로 주는 1~2천만 원의 정착금은 민간 전세 보증금으로 쓰거나, 나중에 집 계약할 때 '최소 단위'로 써야 합니다. 알바해서 번 돈으로 생활하고, 이 돈은 없는 돈이라 생각하세요.<br>
-        2. **청년도약계좌는 필수:** 만기까지 들고 가면 내가 넣은 돈보다 수천만 원을 더 얹어줍니다. 주거 자금 마련의 핵심 열쇠입니다.<br>
-        3. **내 보증금 계산법 실습:** (예: 전세 1.2억 집일 때, LH 지원 1.14억 + 내 돈 600만 원). 이 최소 보증금을 위해 20대 초반엔 무조건 천만 원을 모아야 합니다.
-
-        <b>[2단계. 민간 전셋집 구할 때 (전세사기 예방 5계명)]</b><br>
-        1. **등기부등본 확인:** 반드시 부동산에서 출력한 최신본을 보고, 주소와 소유자가 일치하는지, 대출(융자)은 없는지 직접 눈으로 확인하세요.<br>
-        2. **대항력 갖추기:** 이사 당일, 반드시 이삿짐을 옮기고, 열람가능한 도어락 비밀번호를 받고, 가까운 주민센터에 가서 **'전입신고'**와 **'확정일자'**를 한 번에 다 하세요. 이 세 가지가 합쳐져야 내 보증금을 법적으로 지킬 수 있습니다.<br>
-        3. **공인중개사 자격 확인:** 무자격 중개보조원이 주도하는 계약은 피하세요. 정식 자격증이 있는 중개사인지 확인하고, 중개사고 발생 시 1~2억 원을 보장하는 공제증서도 꼭 챙기세요.
-
-        <b>[3단계. LH 전용 매입임대/건설임대 입주 전략]</b><br>
-        1. **'줍줍' 공고는 금요일 오후:** 매주 금요일 오후 4시쯤 LH청약플러스 공고를 확인하세요. 당첨자가 포기해서 남은 '잔여세대' 모집 공고가 조용히 올라올 때가 많습니다.<br>
-        2. **현장 임장(방문) 필수:** 공고문 사진만 보고 결정하지 마세요. 반드시 직접 현장에 가서 창문 방향(채광), 주위 상권, 교통편, 그리고 집주인의 관리 상태 등을 눈으로 확인해야 후회가 없습니다.<br>
-        3. **이름(예비 순위) 관리:** 공고가 나면 일단 무조건 신청하세요. 당첨 안 되더라도 예비 순번을 받아두면, 나중에 빈집이 나올 때 순서대로 연락이 옵니다.
-
-        <b>[4단계. 통합공공임대와 청약 통장 관리]</b><br>
-        1. **1인 가구 40㎡ 법칙:** 앞서 말했듯 혼자 사는 1인 가구는 넓은 평수를 지원할 수 없습니다. 대신통합공공임대는 가구원 수에 맞춰 면적을 유연하게 배정해 주니, 가구 구성에 변화가 생길 때 적극 노려야 합니다.<br>
-        2. **청약 통장 인정 금액 챌린지:** 하루라도 빨리 월 10만 원을 납입해서, 총 납입 인정 금액을 천만 원 이상으로 만드는 것을 20대 최우선 목표로 삼으세요.<br>
-        3. **DSR 관리 실습:** 현금서비스, 리볼빙은 절대 하지 마세요! 잦은 대출 시도는 내 신용 점수를 깎아먹고 나중에 정작 중요한 집값 대출 심사에서 탈락하게 만듭니다.
-
-        <b>[5단계. 주거복지 정보 사수 전략]</b><br>
-        1. **알림 설정 필수:** 마이홈 포털과 LH청약플러스 앱의 알림 설정은 필수입니다.<br>
-        2. **자립ON 포털 활용:** 자립준비청년 전용 포털인 '자립정보ON'의 주거 게시판을 자주 들어가 보세요. 최신 전용 혜택 정보가 가장 빠르게 올라옵니다.
-        </div>
-    """, unsafe_allow_html=True)
-
-    # 6. PDF 캐릭터 버튼 (글자 없이, 귀여운 집 캐릭터)
+    # 귀여운 캐릭터 PDF 인쇄 버튼
     st.markdown("---")
-    # center 태그를 HTML 코드로 감싸서 움직이는 집 캐릭터 GIF를 클릭 링크로 만듦
     components.html(
         """
         <center>
-            <a href="#" onclick="window.parent.print(); return false;" title="📄 이 맞춤형 리포트를 PDF로 깔끔하게 저장하기 (인쇄 화면에서 [PDF로 저장] 선택)">
-                <img src="https://media.giphy.com/media/ic06p9J076137681I3/giphy.gif" width="120px" style="border-radius:50%; box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+            <a href="#" onclick="window.parent.print(); return false;" title="눌러서 리포트를 저장하세요!">
+                <img src="https://media.giphy.com/media/ic06p9J076137681I3/giphy.gif" width="100px" style="border-radius:50%; box-shadow:0 4px 6px rgba(0,0,0,0.1); cursor:pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
             </a>
-            <p style="color: #7F8C8D; font-size: 14px; margin-top: 15px;">이 움직이는 집 캐릭터를 누르면 맞춤형 주거 로드맵 PDF 인쇄 화면이 뜹니다.<br>각 연령대별 계획이 A4 용지 딱 1장씩 떨어지도록 완벽하게 세팅되어 있습니다!</p>
         </center>
         """,
-        height=250
+        height=150
     )
