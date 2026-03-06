@@ -391,7 +391,7 @@ if submit_btn:
                 당신의 든든한 내 편이 되어 언제든 함께 길을 찾아 줄게요.
             </p>
             <hr style="border: 1px dashed #1ABC9C; width: 60%; margin: 25px auto;">
-            <div style="font-size: 1.3rem; font-weight: bold; color: #2C3E50;">
+            <div style="font-size: 1.3rem; font-weight: color: #2C3E50;">
                 👤 담당자 김정현 (070-7663-1153)
             </div>
         </div>
@@ -401,8 +401,8 @@ if submit_btn:
     components.html(
         """
         <div style="text-align: center; font-family: sans-serif; padding: 20px;">
-            <button onclick="window.parent.print()" style="padding: 18px 40px; font-size: 18px; font-weight: bold; background-color: #2E86C1; color: white; border: none; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.15); transition: all 0.3s ease;">
-                🖨️ 이 맞춤형 리포트를 PDF로 깔끔하게 저장하기
+            <button onclick="window.parent.print()" style="padding: 18px 40px; font-size: 10px; font-weight: bold; background-color: #2E86C1; color: white; border: none; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.15); transition: all 0.3s ease;">
+                🖨️ 인천자립지원전담기관
             </button>
         </div>
         """,
