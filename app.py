@@ -92,19 +92,19 @@ with st.form("lifecycle_form"):
     st.markdown("#### 🌱 [10년 후] 주거 목표")
     fam_10 = st.selectbox("10년 후에는 몇 명과 함께 살고 싶나요?", fam_options, index=0)
     house_10 = st.selectbox("어떤 형태의 집에서 살고 싶나요?", house_options, index=1)
-    sub_10 = st.checkbox("10년 후에도 청약 통장을 계속 유지할 수 있을까요?", value=True)
+    sub_10 = st.checkbox("10년 후에도 청약 통장을 계속 유지할 예정이예요", value=True)
 
     st.markdown("---")
     st.markdown("#### 🏡 [20년 후] 주거 목표")
     fam_20 = st.selectbox("20년 후에는 몇 명과 함께 살고 싶나요?", fam_options, index=1)
     house_20 = st.selectbox("어떤 형태의 집에서 살고 싶나요?", house_options, index=3)
-    sub_20 = st.checkbox("20년 후에도 청약 통장을 계속 유지할 수 있을까요?", value=True)
+    sub_20 = st.checkbox("20년 후에도 청약 통장을 계속 유지할 예정이예요", value=True)
 
     st.markdown("---")
     st.markdown("#### 🌅 [30년 후] 영구 자립 목표")
     fam_30 = st.selectbox("30년 후에는 몇 명과 함께 살고 싶나요?", fam_options, index=2)
     house_30 = st.selectbox("가장 마지막에 이루고 싶은 주거의 모습은요?", house_options, index=4)
-    sub_30 = st.checkbox("모아둔 청약 통장으로 공공분양 등에 도전해 보시겠습니까?", value=True)
+    sub_30 = st.checkbox("모아둔 청약 통장으로 공공분양에 도전할 예정이예요", value=True)
 
     st.write("")
     submit_btn = st.form_submit_button("🚀 나만의 맞춤형 로드맵 리포트 만들기", type="primary")
