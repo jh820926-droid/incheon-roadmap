@@ -1,26 +1,23 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
 # 1. 앱 기본 설정
 st.set_page_config(page_title="2026 인천자립 주거로드맵", page_icon="🏠", layout="centered")
 
-# CSS 스타일링 (부드럽고 신뢰감 있는 색상)
+# CSS 스타일링 (가독성 극대화 및 깔끔한 여백)
 st.markdown("""
     <style>
-    .main-title { font-size: 2.2rem; color: #2C3E50; font-weight: 900; text-align: center; margin-bottom: 0px;}
+    .main-title { font-size: 2.2rem; color: #2C3E50; font-weight: 900; text-align: center; margin-bottom: 5px;}
     .sub-title { font-size: 1.1rem; color: #7F8C8D; text-align: center; margin-bottom: 30px;}
-    .report-header { font-size: 1.8rem; color: #154360; font-weight: 800; border-bottom: 4px solid #154360; padding-bottom: 10px; margin-top: 40px; margin-bottom: 20px;}
-    .section-title { font-size: 1.4rem; color: #2980B9; font-weight: 700; background-color: #EBF5FB; padding: 12px; border-radius: 8px; margin-top: 35px; margin-bottom: 15px;}
-    .info-box { background-color: #FDFEFE; padding: 20px; border-radius: 8px; border: 1px solid #D5D8DC; margin-bottom: 15px; line-height: 1.6;}
-    .warning-box { background-color: #FDEDEC; padding: 20px; border-radius: 8px; border-left: 6px solid #E74C3C; margin-bottom: 15px; line-height: 1.6;}
-    .lh-secret { background-color: #F5EEF8; padding: 20px; border-radius: 8px; border-left: 6px solid #9B59B6; margin-bottom: 15px; line-height: 1.6;}
-    .gasan-box { background-color: #E8F8F5; padding: 20px; border-radius: 8px; border-left: 6px solid #1ABC9C; margin-bottom: 15px; line-height: 1.6;}
-    .current-box { background-color: #FEF9E7; padding: 20px; border-radius: 8px; border-left: 6px solid #F1C40F; margin-bottom: 15px; line-height: 1.6;}
-    .site-box { background-color: #F4F6F7; padding: 20px; border-radius: 8px; border-left: 6px solid #7F8C8D; margin-bottom: 15px; line-height: 1.6;}
-    .contact-box { background-color: #E8F8F5; padding: 25px; border-radius: 10px; text-align: center; border: 2px solid #1ABC9C; margin-top: 40px;}
+    .report-header { font-size: 1.7rem; color: #154360; font-weight: 800; border-bottom: 3px solid #1ABC9C; padding-bottom: 10px; margin-top: 50px; margin-bottom: 30px;}
+    .section-title { font-size: 1.4rem; color: #2C3E50; font-weight: 800; margin-top: 40px; margin-bottom: 15px;}
+    .card-box { background-color: #FFFFFF; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #E5E8E8; margin-bottom: 20px; line-height: 1.7;}
+    .highlight-text { color: #16A085; font-weight: bold;}
+    .tip-box { background-color: #F9E79F; padding: 15px; border-radius: 8px; border-left: 5px solid #F1C40F; margin-top: 10px; color: #4D5656; font-size: 0.95rem;}
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">🏠 2026 인천자립 주거로드맵 시스템</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">🏠 2026 인천자립 주거로드맵</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">나의 속도에 맞춰 그리는 30년 맞춤형 주거 플랜</div>', unsafe_allow_html=True)
 
 try:
@@ -30,148 +27,202 @@ except:
 
 st.divider()
 
-# 2. 고도화된 30년 생애주기 입력 폼
-st.subheader("📋 Step 1. 나의 30년 생애주기 및 주거 설계")
+# 2. 30년 생애주기 입력 폼
+st.subheader("📋 Step 1. 나의 30년 주거 계획 세우기")
 
-fam_options = ["1인 가구 (단독)", "2인 가구 (부부/형제)", "3인 가구 (부부+자녀1)", "4인 이상 가구 (다자녀)"]
+fam_options = ["1인 가구 (혼자 살아요)", "2인 가구 (부부/형제와 살아요)", "3인 가구 (아이 1명과 살아요)", "4인 이상 (다자녀 가정이에요)"]
 house_options = [
-    "전세임대 (내가 원하는 민간주택 탐색)", 
-    "매입임대 (LH가 매입한 다세대/오피스텔)", 
-    "건설임대 (영구/국민/행복 아파트)", 
-    "통합공공임대 (소득연계형 장기거주 아파트)", 
-    "공공분양 (내 집 마련/자가 소유)"
+    "전세임대 (내가 원하는 동네의 집을 찾을래요)", 
+    "매입임대 (LH가 마련한 빌라/오피스텔이 좋아요)", 
+    "건설임대 (안전한 국민/행복 아파트에 살래요)", 
+    "통합공공임대 (이사가기 싫어요, 30년 살래요)", 
+    "공공분양 (내 집을 완전히 소유하고 싶어요)"
 ]
 current_house_options = [
-    "LH 전세임대 (소년소녀가정 등 전형)",
-    "LH 전세/매입임대 (자립준비청년 전형)",
+    "LH 전세임대 (소년소녀가정 등 혜택 중)",
+    "LH 전세/매입임대 (자립준비청년 혜택 중)",
     "일반 무상거주 (시설, 친척집, 지인 등)",
-    "일반 민간 임대 (월세/전세)",
-    "주거취약계층 (고시원, 여관, 비닐하우스 등)"
+    "일반 민간 임대 (개인적으로 월세/전세 계약)",
+    "주거취약계층 (고시원, 여관 등 임시 거주)"
 ]
 
 with st.form("lifecycle_form"):
-    st.info("💡 삶의 모습은 언제든 변할 수 있어요. 지금 생각하는 가장 이상적인 모습을 편안하게 선택해 주세요.")
+    st.info("💡 삶의 모습은 언제든 변할 수 있으니 너무 부담 갖지 마세요. 지금 생각하는 가장 이상적인 모습을 편안하게 골라주면 돼요!")
     
-    with st.expander("📌 [현재] 기본 정보 및 출발선", expanded=True):
-        user_name = st.text_input("👤 성명", "김자립")
-        current_age = st.number_input("🎂 현재 나이", min_value=15, max_value=40, value=20)
-        assets = st.number_input("💰 현재 가용 자산 (단위: 만원)", min_value=0, value=100)
-        is_vulnerable = st.checkbox("보호종료(자립준비) 청년 해당 (우선공급 대상)", value=True)
+    st.markdown("#### 📌 [현재] 출발선 확인하기")
+    user_name = st.text_input("👤 이름이 무엇인가요?", "김자립")
+    col1, col2 = st.columns(2)
+    with col1:
+        current_age = st.number_input("🎂 현재 나이는요?", min_value=15, max_value=40, value=20)
+        assets = st.number_input("💰 모아둔 자산 (단위: 만원)", min_value=0, value=100)
+    with col2:
+        is_vulnerable = st.checkbox("보호종료(자립준비) 청년에 해당하나요?", value=True)
+        now_sub = st.radio("🏦 주택청약통장이 있나요?", ["네, 가입해서 넣고 있어요", "아니요, 없거나 쉬고 있어요"])
         
-        st.write("---")
-        now_house = st.selectbox("🏠 현재 거주 중인 주거 형태", current_house_options)
-        now_sub = st.radio("🏦 현재 주택청약종합저축 상태", ["가입 및 월 납입 중", "미가입 또는 일시 중단"])
+    now_house = st.selectbox("🏠 지금은 어떤 곳에서 지내고 있나요?", current_house_options)
 
-    with st.expander("🌱 [10년 후] 주거 목표"):
-        fam_10 = st.selectbox("10년 후 가구원 수", fam_options, index=0)
-        house_10 = st.selectbox("10년 후 희망 전형", house_options, index=1)
-        sub_10 = st.checkbox("10년 후에도 청약 통장 납입을 꾸준히 유지할 계획인가요?", value=True)
+    st.markdown("---")
+    st.markdown("#### 🌱 [10년 후] 주거 목표")
+    fam_10 = st.selectbox("10년 후에는 몇 명과 함께 살고 싶나요?", fam_options, index=0)
+    house_10 = st.selectbox("어떤 형태의 집에서 살고 싶나요?", house_options, index=1)
+    sub_10 = st.checkbox("그때도 청약 통장을 깨지 않고 계속 유지할 수 있을까요?", value=True)
 
-    with st.expander("🏡 [20년 후] 주거 목표"):
-        fam_20 = st.selectbox("20년 후 가구원 수", fam_options, index=1)
-        house_20 = st.selectbox("20년 후 희망 전형", house_options, index=3)
-        sub_20 = st.checkbox("20년 후에도 청약 통장 납입을 꾸준히 유지할 계획인가요?", value=True)
+    st.markdown("---")
+    st.markdown("#### 🏡 [20년 후] 주거 목표")
+    fam_20 = st.selectbox("20년 후에는 몇 명과 함께 살고 싶나요?", fam_options, index=1)
+    house_20 = st.selectbox("어떤 형태의 집에서 살고 싶나요?", house_options, index=3)
 
-    with st.expander("🌅 [30년 후] 영구 자립 목표"):
-        fam_30 = st.selectbox("30년 후 가구원 수", fam_options, index=2)
-        house_30 = st.selectbox("30년 후 최종 전형", house_options, index=4)
-        sub_30 = st.checkbox("모아둔 청약 통장으로 공공분양 등에 도전해 보시겠습니까?", value=True)
+    st.markdown("---")
+    st.markdown("#### 🌅 [30년 후] 영구 자립 목표")
+    fam_30 = st.selectbox("30년 후에는 몇 명과 함께 살고 싶나요?", fam_options, index=2)
+    house_30 = st.selectbox("가장 마지막에 이루고 싶은 주거의 모습은요?", house_options, index=4)
 
-    submit_btn = st.form_submit_button("🚀 맞춤형 로드맵 리포트 추출하기", type="primary")
+    st.write("")
+    submit_btn = st.form_submit_button("🚀 나만의 맞춤형 로드맵 리포트 만들기", type="primary")
 
-# 3. 분석 알고리즘 (부드러운 권고 및 디테일 안내)
-def analyze_current_status(age, assets, now_house, now_sub):
+# 3. 분석 알고리즘 (친절한 구어체 & 가독성 개선)
+def analyze_current(assets, now_house, now_sub):
     report = ""
-    if now_sub == "미가입 또는 일시 중단":
-        report += "<div class='warning-box'><b>💡 [전문가 제안] 청년주택드림청약통장 가입 및 재개 권장</b><br>현재 청약통장이 없다면 향후 아파트(건설임대/분양) 입주 시 불리할 수 있음. 여력이 될 때 수탁은행을 방문하여 소액(2만 원)이라도 가입하고 꾸준히 유지해 보는 것을 적극 권장함.</div>"
+    # 청약 안내
+    if "아니요" in now_sub:
+        report += "<div class='card-box'>🏦 <b>청약 통장은 자립의 무기예요!</b><br>지금 청약 통장이 없거나 쉬고 계시군요. 나중에 LH 아파트나 내 집 마련을 할 때 청약 통장이 없으면 너무 아쉬울 수 있어요. 한 달에 2만 원씩이라도 은행에 가서 만들어두는 것을 꼭 추천해요!</div>"
     else:
-        report += "<div class='info-box'><b>✅ [점검결과] 주택청약 유지 우수</b><br>아주 잘하고 있음! 현재 납입 기간과 횟수가 모두 미래의 소중한 자산이 되므로, 무리하지 않는 선에서 꾸준히 유지하는 것이 좋음.</div>"
+        report += "<div class='card-box'>🏦 <b>청약 통장 관리를 정말 잘하고 있어요!</b><br>지금처럼 연체 없이 꾸준히 넣은 횟수가 나중에 아파트에 들어갈 때 엄청난 가산점이 될 거예요. 힘들더라도 절대 깨지 말고 유지해 보아요!</div>"
 
+    # 주거 형태별 안내
     if "소년소녀가정" in now_house:
-        report += "<div class='current-box'><b>🎯 [맞춤 제안] 소년소녀가정 전세임대 거주 시</b><br>▶ 만 20세까지 이자가 면제되는 훌륭한 주거 환경임.<br>▶ 만 22세 이후부터는 소정의 임대료(이자)가 발생할 수 있으니, 지금부터 주거비 여유분을 조금씩 저축하여 미래의 독립 자금으로 활용하는 것을 추천함.</div>"
+        report += "<div class='card-box'>🏠 <b>현재 주거: 소년소녀가정 전세임대</b><br>만 20세까지는 이자가 완전히 면제되어서 주거비 부담이 없는 정말 좋은 시기랍니다.<br><br><span class='highlight-text'>💡 담당자의 꿀팁:</span> 만 22세 이후부터는 조금씩 임대료(이자)를 내야 할 수도 있어요. 주거비가 굳는 지금! 여유 돈을 차곡차곡 모아두면 큰 도움이 될 거예요.</div>"
     elif "자립준비청년" in now_house:
-        report += "<div class='current-box'><b>🎯 [맞춤 제안] 자립준비청년 전세/매입임대 거주 시</b><br>▶ 보호종료 후 5년 이내 임대료 감면 혜택을 받고 있어 안정적임.<br>▶ 특례 기간이 종료될 무렵 임대료 상승이 있을 수 있으므로, 현재 가용 자산(" + str(assets) + "만 원)을 기반으로 미리 전환보증금 추가 납입 등을 계획해 보는 것이 좋음.</div>"
+        report += f"<div class='card-box'>🏠 <b>현재 주거: 자립준비청년 혜택 적용 중</b><br>보호가 끝난 후 5년 동안은 임대료를 50%나 할인받을 수 있어서 정말 든든해요.<br><br><span class='highlight-text'>💡 담당자의 꿀팁:</span> 5년 혜택이 끝나갈 무렵엔 임대료가 조금 오를 수 있어요. 지금 모아둔 {assets}만 원을 보증금으로 전환해서 나중에 월세를 줄이는 데 활용해 보면 어떨까요?</div>"
     elif "무상거주" in now_house:
-        report += "<div class='current-box'><b>🎯 [맞춤 제안] 무상거주 (시설/친인척) 시</b><br>▶ 현재 주거비 지출이 없는 시기를 '종잣돈 마련의 골든타임'으로 활용해 볼 것.<br>▶ 향후 독립 시 자립준비청년 1순위 자격을 활용해 안전한 LH 임대주택으로 첫발을 내딛기를 권장함.</div>"
+        report += "<div class='card-box'>🏠 <b>현재 주거: 시설이나 지인과 함께 생활 중</b><br>주거비(월세)가 따로 나가지 않는 지금이 바로 '종잣돈'을 모을 수 있는 최고의 골든타임이에요!<br><br><span class='highlight-text'>💡 담당자의 꿀팁:</span> 청년도약계좌 같은 좋은 적금에 돈을 묶어두고, 나중에 독립할 때 자립준비청년 1순위 자격으로 안전한 LH 주택으로 이사 가는 걸 목표로 해봐요.</div>"
     elif "일반 민간 임대" in now_house:
-        report += "<div class='warning-box'><b>💡 [전문가 제안] LH 주거복지 제도로의 전환 검토</b><br>▶ 민간 월세 지출은 장기적인 자산 형성에 부담이 될 수 있음.<br>▶ 본인의 1순위 자격(자립준비청년 등)을 활용하여 보증금 부담이 적은 LH 매입/전세임대로 이전하는 것을 담당 멘토와 함께 긍정적으로 검토해 볼 것.</div>"
+        report += "<div class='card-box'>🏠 <b>현재 주거: 개별적으로 구한 월세/전세</b><br>매달 나가는 월세가 장기적으로는 자산을 모으는 데 큰 부담이 될 수 있어요.<br><br><span class='highlight-text'>💡 담당자의 꿀팁:</span> 여러분은 보증금 부담이 적고 훨씬 안전한 LH 임대주택에 1순위로 들어갈 수 있는 자격이 있어요! 담당자와 함께 LH 주택으로 이사 갈 방법을 꼭 상의해 보길 바라요.</div>"
     elif "주거취약계층" in now_house:
-        report += "<div class='warning-box'><b>💡 [전문가 제안] 주거 상향 지원제도 적극 활용</b><br>▶ 현재의 주거 환경이 불편하다면 혼자 고민하지 말고 멘토에게 도움을 요청할 것.<br>▶ '주거취약계층 주거상향 지원사업' 등 안전하고 따뜻한 곳으로 이사할 수 있는 다양한 정부 지원이 준비되어 있음.</div>"
+        report += "<div class='card-box'>🏠 <b>현재 주거: 고시원 등 도움이 필요한 곳</b><br>지금 지내는 곳이 불편하거나 마음이 쓰인다면 절대 혼자서 고민하지 마세요.<br><br><span class='highlight-text'>💡 담당자의 꿀팁:</span> '주거상향 지원사업'처럼 여러분을 더 안전하고 따뜻한 집으로 안내해 줄 수 있는 정부 지원이 많이 준비되어 있어요. 언제든 담당자에게 꼭 알려주세요!</div>"
+    
     return report
 
-def generate_lh_details(fam, house, sub_status):
-    report = ""
-    if not sub_status:
-        report += "<div class='warning-box'><b>💡 [참고 사항] 청약 납입 중지 시 유의점</b><br>개인의 경제적 상황에 따라 잠시 쉴 수는 있으나, 향후 임대주택 및 공공분양 경쟁 시 배점이 낮아질 수 있음을 참고하여 가급적 유지를 권장함.</div>"
-
+def generate_future(fam, house):
+    report = f"<div class='card-box'>👨‍👩‍👧‍👦 <b>목표 가족:</b> {fam}<br>🏡 <b>목표 주거:</b> {house}</div>"
+    
     if "전세임대" in house:
-        report += "<div class='info-box'><b>📑 [전세임대] 공고 및 지원 가이드</b><br>▶ <b>신청 시기:</b> 자립준비청년 전세임대는 언제든 상시 신청 가능. 일반/신혼 유형은 주로 연초(1~2월)에 공고가 집중됨.<br>▶ <b>지원 내용:</b> 내가 원하는 동네의 집을 고르면 LH가 보증금을 지원해 주는 방식임 (수도권 약 1.2억 원 수준).</div>"
-        report += "<div class='gasan-box'><b>🎯 [유리한 지원 전략]</b><br>1. <b>안전한 집 찾기:</b> 집에 빚이 많으면(부채비율 90% 초과) LH 승인이 나지 않으므로, 부동산에 \"LH 전세가 가능한 안전한 집\"을 먼저 요청할 것.<br>2. <b>사전 준비:</b> 본인의 소득과 재산을 일정 수준 이하로 잘 관리하면 서류 심사에서 훨씬 유리함.</div>"
+        report += """
+        <div class='card-box'>
+            <b>🔎 전세임대, 이렇게 준비해 봐요!</b><br>
+            내가 원하는 동네, 맘에 드는 집을 고르면 LH가 보증금을 대신 내주는 제도예요. 일반이나 신혼 유형은 보통 연초(1~2월)에 모집 공고가 많이 나온답니다.<br><br>
+            <div class='tip-box'>
+            <b>💡 담당자가 알려주는 합격 팁</b><br>
+            집주인에게 빚이 많은 집(부채비율 90% 초과)은 LH에서 위험하다고 판단해서 계약을 안 해줘요. 부동산에 갈 때 처음부터 "LH 전세가 가능한 빚 없는 안전한 집만 보여주세요"라고 당당하게 요청하세요!
+            </div>
+        </div>
+        """
     elif "매입임대" in house:
-        report += "<div class='info-box'><b>📑 [매입임대] 공고 및 지원 가이드</b><br>▶ <b>신청 시기:</b> 보통 3, 6, 9, 12월에 정기 모집 공고가 나옴.<br>▶ <b>지원 내용:</b> LH가 튼튼하게 지어진 다세대나 오피스텔을 미리 매입해 저렴하게 빌려주는 방식이라 전세사기 걱정이 없음.</div>"
-        report += "<div class='gasan-box'><b>🎯 [유리한 지원 전략]</b><br>1. <b>수시모집(줍줍) 활용:</b> 미계약 시 수시로 공고가 올라옴. LH청약플러스 앱에서 '관심지역 알림'을 켜두면 정보를 빠르게 얻을 수 있음.<br>2. <b>지역 거주 가점:</b> 인천에 오래 살았거나 청약통장을 꾸준히 냈다면 가산점을 받아 유리해짐.</div>"
+        report += """
+        <div class='card-box'>
+            <b>🔎 매입임대, 이렇게 준비해 봐요!</b><br>
+            LH가 직접 튼튼한 다세대 주택이나 오피스텔을 사서 싸게 빌려주기 때문에 전세사기 걱정이 0%랍니다. 보통 3, 6, 9, 12월에 크게 모집을 해요.<br><br>
+            <div class='tip-box'>
+            <b>💡 담당자가 알려주는 합격 팁</b><br>
+            LH청약플러스 앱을 깔고 '관심지역 알림'을 켜두세요. 빈집이 생기면 수시로 공고가 뜨거든요! 또 당첨 후에 보증금을 조금 더 내면 매달 내는 월세를 치킨 한 마리 값 수준으로 뚝 떨어뜨릴 수 있답니다.
+            </div>
+        </div>
+        """
     elif "건설임대" in house:
-        report += "<div class='info-box'><b>📑 [건설임대: 행복/국민] 공고 및 지원 가이드</b><br>▶ <b>신청 시기:</b> 새 아파트는 지어지기 약 1년 전 수시로, 기존 아파트는 예비입주자를 반기별로 모집함.<br>▶ <b>지원 내용:</b> " + fam + "에 맞는 평형의 아파트에 저렴하게 입주하여 단지 내 쾌적한 환경을 누릴 수 있음.</div>"
-        report += "<div class='gasan-box'><b>🎯 [유리한 지원 전략]</b><br>1. 아파트 입주는 인기가 많아 점수 관리가 중요함. <b>청약저축을 꾸준히 납입한 횟수</b>와 <b>해당 지역(인천) 거주 기간</b>이 당첨을 돕는 든든한 무기가 됨.</div>"
+        report += f"""
+        <div class='card-box'>
+            <b>🔎 건설임대(아파트), 이렇게 준비해 봐요!</b><br>
+            단지 내 쾌적한 환경을 누리며 안전하게 살 수 있어요. {fam}에 맞는 예쁜 평형의 아파트를 배정받게 될 거예요.<br><br>
+            <div class='tip-box'>
+            <b>💡 담당자가 알려주는 합격 팁</b><br>
+            아파트 입주는 인기가 많아서 점수 관리가 필수예요. <b>청약 통장에 연체 없이 꾸준히 돈을 넣은 횟수</b>와 <b>인천에 얼마나 오래 살았는지</b>가 당첨을 결정짓는 가장 큰 무기가 된답니다.
+            </div>
+        </div>
+        """
     elif "통합공공" in house:
-        report += f"<div class='info-box'><b>📑 [통합공공임대] 공고 및 지원 가이드</b><br>▶ <b>신청 시기:</b> 신규 택지지구를 중심으로 수시 공고가 예상됨.<br>▶ <b>지원 내용:</b> 나중에 소득이 오르더라도 상황에 맞춰 임대료를 내며 최장 30년까지 편안하게 거주할 수 있는 진화된 아파트 전형임. 맞벌이나 다자녀일수록 가점 확보에 유리함.</div>"
+        report += f"""
+        <div class='card-box'>
+            <b>🔎 통합공공임대, 이렇게 준비해 봐요!</b><br>
+            나중에 취업을 해서 월급이 오르더라도 방 빼라고 쫓겨나지 않아요! 내 소득에 맞춰서 임대료를 내며 최장 30년까지 편하게 살 수 있는 아주 든든한 아파트예요.<br><br>
+            <div class='tip-box'>
+            <b>💡 담당자가 알려주는 합격 팁</b><br>
+            맞벌이를 하거나 다자녀 가정이 될수록 가산점을 받기 유리한 전형이에요. 신규 택지구구(검단, 계양 등)에서 모집 공고가 자주 뜰 테니 눈여겨봐요!
+            </div>
+        </div>
+        """
     elif "분양" in house:
-        report += "<div class='info-box'><b>📑 [공공분양: 뉴홈] 내 집 마련 가이드</b><br>▶ <b>신청 시기:</b> 분기별 사전청약 일정에 따라 진행됨.<br>▶ <b>지원 내용:</b> " + fam + " 상황에 맞춰 특별공급(생애최초, 신혼, 다자녀 등)을 활용하면 시세보다 저렴하게 내 집을 가질 기회가 생김.</div>"
-        report += "<div class='lh-secret'><b>💡 [LH 정보 꿀팁] 청약통장 활용과 신용 관리</b><br>분양 당첨은 청약통장에 '매월 10만 원씩 꾸준히 인정받은 금액'이 많을수록 유리함. 또한 당첨 후 원활한 모기지 대출을 위해 휴대폰 요금이나 신용카드 대금이 연체되지 않도록 건강한 신용점수를 유지하는 것이 좋음.</div>"
+        report += f"""
+        <div class='card-box'>
+            <b>🔎 공공분양, 내 집 마련 이렇게 준비해 봐요!</b><br>
+            LH의 '뉴홈' 같은 제도를 통해 특별공급(생애최초, 신혼부부 등)을 활용하면 주변 시세보다 훨씬 저렴하게 진짜 내 집을 가질 수 있어요.<br><br>
+            <div class='tip-box'>
+            <b>💡 담당자가 알려주는 합격 팁</b><br>
+            분양 당첨은 청약 통장에 <b>'매월 10만 원씩 꾸준히 인정받은 금액'</b>이 많을수록 유리해요! 또 당첨 후에 이자가 싼 나라의 대출을 잘 받으려면, 휴대폰 요금을 밀리지 않는 등 건강한 신용점수를 유지하는 게 정말 중요해요.
+            </div>
+        </div>
+        """
     return report
 
-# 4. 리포트 출력부
+# 4. 리포트 출력 및 PDF 버튼
 if submit_btn:
-    st.markdown(f'<div class="report-header">📑 {user_name} 청년의 속도에 맞춘 30년 주거 로드맵</div>', unsafe_allow_html=True)
-    st.write(f"**발급연도:** 2026년 | **발급기관:** 인천자립지원전담기관")
+    st.markdown(f'<div class="report-header">📑 {user_name} 님을 위한 맞춤형 30년 주거 로드맵</div>', unsafe_allow_html=True)
 
-    # 1. 현재 
+    # 섹션 1
     st.markdown(f'<div class="section-title">1. 현재 ({current_age}세) : 나의 출발선 확인하기</div>', unsafe_allow_html=True)
-    st.markdown(analyze_current_status(current_age, assets, now_house, now_sub), unsafe_allow_html=True)
+    st.markdown(analyze_current(assets, now_house, now_sub), unsafe_allow_html=True)
     
-    # 10년, 20년, 30년
+    # 섹션 2
     st.markdown(f'<div class="section-title">2. 10년 후 ({current_age+10}세) 주거 계획 및 꿀팁</div>', unsafe_allow_html=True)
-    st.markdown(generate_lh_details(fam_10, house_10, sub_10), unsafe_allow_html=True)
+    st.markdown(generate_future(fam_10, house_10), unsafe_allow_html=True)
 
+    # 섹션 3
     st.markdown(f'<div class="section-title">3. 20년 후 ({current_age+20}세) 주거 계획 및 꿀팁</div>', unsafe_allow_html=True)
-    st.markdown(generate_lh_details(fam_20, house_20, sub_20), unsafe_allow_html=True)
+    st.markdown(generate_future(fam_20, house_20), unsafe_allow_html=True)
 
+    # 섹션 4
     st.markdown(f'<div class="section-title">4. 30년 후 ({current_age+30}세) 안정적인 주거 자립</div>', unsafe_allow_html=True)
-    st.markdown(generate_lh_details(fam_30, house_30, sub_30), unsafe_allow_html=True)
+    st.markdown(generate_future(fam_30, house_30), unsafe_allow_html=True)
     
-    # 5. 필수 사이트 안내
+    # 섹션 5. 도움받는 곳
     st.markdown('<div class="section-title">5. 든든한 주거복지 정보망 (도움받는 곳)</div>', unsafe_allow_html=True)
     st.markdown("""
-        <div class='site-box'>
+        <div class='card-box'>
         <b>1️⃣ LH 청약플러스 (https://apply.lh.or.kr/)</b><br>
-        - <b>어떤 곳인가요?</b> 실제 임대주택 및 분양 공고문을 확인하고, 청약을 신청하는 공식 사이트입니다.<br>
-        - <b>활용 팁:</b> 앱을 다운로드하여 '관심지역(인천광역시) 알리미'를 설정해 두면 수시로 뜨는 공고를 쉽게 확인할 수 있어요.
-        <br><br>
+        실제 집 공고를 보고 신청하는 곳이에요. 앱을 깔고 '관심지역 알림'을 켜두면 좋아요.<br><br>
         <b>2️⃣ 마이홈 포털 (https://www.myhome.go.kr/)</b><br>
-        - <b>어떤 곳인가요?</b> 전국 모든 종류의 주거복지 제도를 검색하고, 내 조건에 맞는 혜택을 찾아주는 길잡이 사이트입니다.<br>
-        - <b>활용 팁:</b> '자가진단' 메뉴를 통해 내가 어떤 전형에 유리한지 미리 편안하게 알아볼 수 있습니다.
-        <br><br>
+        나에게 맞는 혜택이 뭔지 모를 때, '자가진단' 메뉴를 통해 미리 테스트해 볼 수 있어요.<br><br>
         <b>3️⃣ 자립정보ON (https://jaripon.ncrc.or.kr/)</b><br>
-        - <b>어떤 곳인가요?</b> 자립준비청년만을 위해 마련된 전용 정보 포털로 주거, 금융, 취업 정보를 통합 제공합니다.
-        <br><br>
+        자립준비청년들을 위해 주거, 금융, 취업 정보를 모두 모아둔 전용 포털이에요.<br><br>
         <b>4️⃣ 주택도시기금 (https://nhuf.molit.go.kr/)</b><br>
-        - <b>어떤 곳인가요?</b> 청년전용 버팀목 전세자금 등 부담을 덜어주는 국가 대출 상품들을 안내해 줍니다.
+        나중에 집을 구할 때, 이자가 아주 저렴한 나라의 대출(버팀목, 디딤돌 등)을 알아볼 수 있어요.
         </div>
     """, unsafe_allow_html=True)
 
-    # 6. 담당자 연락처 및 최종 권고
+    # 6. 담당자 핫라인
     st.markdown(f"""
-        <div class='contact-box'>
-            <h3 style="color: #16A085; margin-bottom: 5px;">언제든 편하게 연락 주세요! 📞</h3>
+        <div class='card-box' style="background-color: #E8F8F5; border: 2px solid #1ABC9C; text-align: center;">
+            <h3 style="color: #16A085; margin-bottom: 15px;">언제든 편하게 연락 주세요! 📞</h3>
             <p style="color: #34495E; font-size: 1.1rem; margin-bottom: 0px;">
-                사람마다 처한 상황이 다르고, 계획은 언제든 변할 수 있습니다.<br>
-                단순히 공고를 기다리기보다는 미리 요건을 차근차근 준비하는 것이 좋은 결과를 얻는 지름길입니다.<br>
-                이 로드맵을 보다가 추가적인 설명이 필요하거나 계획을 수정하고 싶다면 혼자 고민하지 말고 멘토에게 연락 주세요. 당신의 든든한 내 편이 되어 함께 길을 찾겠습니다.
+                로드맵을 보다가 어려운 말이 있거나, 계획을 바꾸고 싶다면 절대 혼자 고민하지 마세요.<br>
+                당신의 든든한 내 편이 되어 언제든 함께 길을 찾아 줄게요.
             </p>
-            <hr style="border: 1px solid #1ABC9C; width: 50%; margin: 15px auto;">
-            <p style="font-size: 1.2rem; font-weight: bold; color: #2C3E50; margin-bottom: 0px;">
-                👤 담당 멘토: 김정현<br>
+            <div style="font-size: 1.2rem; font-weight: bold; color: #2C3E50; margin-top: 20px;">
+                👤 담당자 김정현<br>
                 ☎️ 직통 번호: 070-7663-1153
-            </p>
+            </div>
         </div>
     """, unsafe_allow_html=True)
+
+    # PDF 추출 버튼 (HTML/JavaScript 삽입)
+    st.markdown("---")
+    components.html(
+        """
+        <div style="text-align: center; font-family: sans-serif;">
+            <button onclick="window.parent.print()" style="padding: 15px 30px; font-size: 18px; font-weight: bold; background-color: #2E86C1; color: white; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                📄 이 리포트를 PDF로 저장하기
+            </button>
+            <p style="color: #7F8C8D; font-size: 13px; margin-top: 10px;">버튼을 누른 후 '대상' 또는 '프린터'를 <b>[PDF로 저장]</b>으로 변경해 주세요.</p>
+        </div>
+        """,
+        height=150
+    )
