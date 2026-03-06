@@ -4,7 +4,7 @@ import streamlit.components.v1 as components
 # 1. 앱 기본 설정
 st.set_page_config(page_title="2026 인천자립 주거로드맵", page_icon="🏠", layout="centered")
 
-# CSS 스타일링 (가독성 극대화 및 🖨️ PDF 전체 페이지 인쇄 완벽 제어)
+# CSS 스타일링 (🖨️ PDF 인쇄 시 스트림릿의 모든 스크롤 제한 강제 해제)
 st.markdown("""
     <style>
     .main-title { font-size: 2.2rem; color: #2C3E50; font-weight: 900; text-align: center; margin-bottom: 5px;}
@@ -15,31 +15,41 @@ st.markdown("""
     .tip-box { background-color: #F9E79F; padding: 22px; border-radius: 8px; border-left: 6px solid #F1C40F; margin-top: 15px; margin-bottom: 15px; color: #4D5656; font-size: 1rem; line-height: 1.7;}
     .step-list { margin-left: 20px; margin-bottom: 15px; }
     
-    /* 🖨️ PDF 전체 화면 인쇄를 위한 마법의 CSS (스트림릿 스크롤 강제 해제) */
+    /* 🖨️ 핵폭탄급 PDF 인쇄 강제 해제 CSS */
     @media print {
-        /* 1. 인쇄 시 불필요한 입력 폼, 사이드바, 헤더, 버튼 등 완벽하게 숨기기 */
-        header, footer, [data-testid="stSidebar"], [data-testid="stForm"], button { display: none !important; }
-        .main-title, .sub-title, img, hr { display: none !important; }
+        /* 1. 인쇄 시 불필요한 요소 싹 다 숨기기 */
+        header, footer, [data-testid="stSidebar"], [data-testid="stHeader"], [data-testid="stForm"], button { display: none !important; }
+        .main-title, .sub-title, hr { display: none !important; }
         
-        /* 2. 🌟 핵심: 스크롤이 있는 모든 컨테이너의 높이 제한을 풀고 블록 형태로 전환 🌟 */
-        html, body, #root, .stApp, [data-testid="stAppViewContainer"], [data-testid="stMainBlockContainer"], [data-testid="stVerticalBlock"] {
+        /* 2. 🌟 스트림릿의 높이 제한/스크롤을 박살내고 화면을 길게 쫙 펼치는 핵심 코드 🌟 */
+        html, body, #root, .stApp, 
+        [data-testid="stAppViewContainer"], 
+        [data-testid="stAppViewContainer"] > section, 
+        .main, 
+        [data-testid="stMainBlockContainer"],
+        [data-testid="stVerticalBlock"],
+        [data-testid="stVerticalBlockBorderWrapper"] {
             height: auto !important;
             min-height: 100% !important;
+            max-height: none !important;
             overflow: visible !important;
             display: block !important;
-            position: relative !important;
+            position: static !important;
+            transform: none !important;
             background-color: white !important;
         }
         
-        /* 3. 각 단계별로 무조건 새로운 A4 용지로 넘기기 */
+        /* 3. 페이지 나누기 (무조건 새 A4 용지로 넘김) */
         .page-break {
             page-break-before: always !important;
             display: block !important;
-            height: 0px !important;
+            height: 1px !important;
+            margin: 0 !important;
+            padding: 0 !important;
             border: none !important;
         }
         
-        /* 4. 인쇄할 때 배경색(노란 박스 등)이 하얗게 날아가는 현상 방지 */
+        /* 4. 배경색 유지 */
         * {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
@@ -332,7 +342,7 @@ def generate_future(age, fam, house, sub_status):
         """
     return report
 
-# 5. 리포트 출력 및 PDF 버튼
+# 5. 리포트 출력 
 if submit_btn:
     st.markdown('<div class="report-header">📑 나만을 위한 맞춤형 30년 주거 로드맵</div>', unsafe_allow_html=True)
 
@@ -386,3 +396,15 @@ if submit_btn:
             </div>
         </div>
     """, unsafe_allow_html=True)
+    
+    # PDF 추출 버튼 추가
+    components.html(
+        """
+        <div style="text-align: center; font-family: sans-serif; padding: 20px;">
+            <button onclick="window.parent.print()" style="padding: 18px 40px; font-size: 18px; font-weight: bold; background-color: #2E86C1; color: white; border: none; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.15); transition: all 0.3s ease;">
+                🖨️ 이 맞춤형 리포트를 PDF로 깔끔하게 저장하기
+            </button>
+        </div>
+        """,
+        height=100
+    )
