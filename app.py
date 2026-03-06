@@ -14,6 +14,7 @@ st.markdown("""
     .warning-box { background-color: #FDEDEC; padding: 20px; border-radius: 8px; border-left: 6px solid #E74C3C; margin-bottom: 15px; line-height: 1.6;}
     .lh-secret { background-color: #F5EEF8; padding: 20px; border-radius: 8px; border-left: 6px solid #9B59B6; margin-bottom: 15px; line-height: 1.6;}
     .gasan-box { background-color: #E8F8F5; padding: 20px; border-radius: 8px; border-left: 6px solid #1ABC9C; margin-bottom: 15px; line-height: 1.6;}
+    .current-box { background-color: #FEF9E7; padding: 20px; border-radius: 8px; border-left: 6px solid #F1C40F; margin-bottom: 15px; line-height: 1.6;}
     </style>
 """, unsafe_allow_html=True)
 
@@ -39,6 +40,14 @@ house_options = [
     "공공분양 (내 집 마련/자가 소유)"
 ]
 
+current_house_options = [
+    "LH 전세임대 (소년소녀가정 등 전형)",
+    "LH 전세/매입임대 (자립준비청년 전형)",
+    "일반 무상거주 (시설, 친척집, 지인 등)",
+    "일반 민간 임대 (월세/전세)",
+    "주거취약계층 (고시원, 여관, 비닐하우스 등)"
+]
+
 with st.form("lifecycle_form"):
     st.info("💡 시작점인 '현재'부터 30년 후까지, 청약 통장 유지 여부와 희망 주거를 꼼꼼히 설계해 보아요!")
     
@@ -48,7 +57,9 @@ with st.form("lifecycle_form"):
         assets = st.number_input("💰 현재 가용 자산 (단위: 만원)", min_value=0, value=100)
         is_vulnerable = st.checkbox("보호종료(자립준비) 청년 해당 (우선공급 대상)", value=True)
         
-        now_sub = st.radio("현재 주택청약종합저축 상태", ["가입 및 월 납입 중", "미가입 또는 연체 중"])
+        st.write("---")
+        now_house = st.selectbox("🏠 현재 거주 중인 주거 형태 (매우 중요)", current_house_options)
+        now_sub = st.radio("🏦 현재 주택청약종합저축 상태", ["가입 및 월 납입 중", "미가입 또는 연체 중"])
 
     with st.expander("🌱 [10년 후] 주거 목표 설계"):
         fam_10 = st.selectbox("10년 후 가구원 수", fam_options, index=0)
@@ -67,10 +78,32 @@ with st.form("lifecycle_form"):
 
     submit_btn = st.form_submit_button("🚀 전형별 가점 및 공고 분석 리포트 추출", type="primary")
 
-# 3. 분석 알고리즘 (공고 시기 및 가점 획득 전략 이식)
-def generate_lh_details(fam, house, sub_status):
+# 3. 분석 알고리즘 (현재 상태 진단 및 행정 지시)
+def analyze_current_status(age, assets, now_house, now_sub):
     report = ""
     
+    # 청약 진단
+    if now_sub == "미가입 또는 연체 중":
+        report += "<div class='warning-box'><b>🚨 [긴급 행정명령] 청년주택드림청약통장 즉시 개설</b><br>건설임대 가점 및 공공분양 진입 불가 상태임. 명일 수탁은행 즉시 방문하여 계좌 개설 및 최소 2만 원 자동이체 강제 설정 지시.</div>"
+    else:
+        report += "<div class='info-box'><b>✅ [점검결과] 주택청약 유지 양호 (가점 확보 중)</b><br>현재 인천광역시 거주 기간과 함께 매월 납입 횟수가 LH 배점표의 점수로 축적되고 있음. 해지 절대 불가.</div>"
+
+    # 현재 거주 형태별 디테일 진단 및 솔루션 (명사형 마감)
+    if "소년소녀가정" in now_house:
+        report += "<div class='current-box'><b>🎯 [현재 주거 진단] 소년소녀가정 전세임대 거주</b><br>▶ <b>현황 분석:</b> 만 20세까지 전세지원금에 대한 이자가 전액 면제되는 최상의 조건임.<br>▶ <b>행정 지시:</b> 만 22세 이후부터 임대료(이자)가 발생함. 무이자 혜택이 유지되는 현재 시점에 주거비 지출액을 전액 저축하여 최소 1,000만 원 이상의 기초 자산을 강제 형성할 것.</div>"
+    elif "자립준비청년" in now_house:
+        report += "<div class='current-box'><b>🎯 [현재 주거 진단] 자립준비청년 전세/매입임대 거주</b><br>▶ <b>현황 분석:</b> 보호종료 후 5년 이내 임대료 50% 감면 혜택 적용 중으로 주거 안정성 우수함.<br>▶ <b>행정 지시:</b> 5년 특례 종료 시점의 임대료 상승에 선제적으로 대비 요망. 전환보증금 추가 납입을 위한 자산(현재 가용 자산: " + str(assets) + "만 원) 축적 극대화 지시.</div>"
+    elif "무상거주" in now_house:
+        report += "<div class='current-box'><b>🎯 [현재 주거 진단] 일반 무상거주 (시설/친인척)</b><br>▶ <b>현황 분석:</b> 주거비(월세/이자) 지출이 0원인 재무적 황금기임.<br>▶ <b>행정 지시:</b> 자립정착금 및 수당 등 잉여 현금흐름 전액을 청년도약계좌 및 적금으로 묶어둘 것. 향후 독립 시 자립준비청년 전세/매입임대 1순위 특권을 활용하여 즉각적인 주거 상향 이동 준비.</div>"
+    elif "일반 민간 임대" in now_house:
+        report += "<div class='warning-box'><b>🚨 [현재 주거 진단] 일반 민간 임대 (월세/전세) 거주</b><br>▶ <b>현황 분석:</b> 매월 소멸성 주거비(월세) 지출로 인한 심각한 자산 누수 발생 중. 민간 전세사기 리스크 노출.<br>▶ <b>행정 지시:</b> 1순위 자격(자립준비청년 등)을 즉각 행사하여 LH 전세/매입임대로 즉시 거주지 이전 지시. 주거비 지출을 시세의 30% 이하로 통제하지 않으면 향후 로드맵 달성 불가.</div>"
+    elif "주거취약계층" in now_house:
+        report += "<div class='warning-box'><b>🚨 [긴급 개입 요망] 주거취약계층 (고시원 등) 거주</b><br>▶ <b>현황 분석:</b> 최저주거기준 미달 상태로 심신 안정 및 자립 기반 조성 불가.<br>▶ <b>행정 지시:</b> 담당 멘토 긴급 개입 요망. '주거취약계층 주거상향 지원사업' 또는 '자립준비청년 매입임대' 수시모집을 통해 즉각적인 주거 이전 실행 지시. 필요 시 지자체 긴급주거지원(보증금/월세 지원) 연계 요망.</div>"
+
+    return report
+
+def generate_lh_details(fam, house, sub_status):
+    report = ""
     # 청약 상태 체크
     if not sub_status:
         report += "<div class='warning-box'><b>🚨 [치명적 리스크] 청약 납입 중단 경고</b><br>청약 납입 중단 시 건설임대 배점(최대 6점) 및 공공분양 자격이 즉시 박탈됨. 예외 없는 월 2만 원 강제 납입 이행 지시.</div>"
@@ -79,22 +112,18 @@ def generate_lh_details(fam, house, sub_status):
     if "전세임대" in house:
         report += "<div class='info-box'><b>📑 [전세임대] 공고 확인 및 지원 가이드</b><br>▶ <b>공고 확인처:</b> LH청약플러스(apply.lh.or.kr) 및 관할 주민센터.<br>▶ <b>공고 시기:</b> 자립준비청년 전세임대는 <b>'연중 상시'</b> 신청 가능. 일반/신혼 전세임대는 연초(1~2월) 정기 모집 공고 집중.<br>▶ <b>지원 한도:</b> 수도권 기준 최소 1.2억 원. 90% 부채비율 권리분석 통과 매물 한정.</div>"
         report += "<div class='gasan-box'><b>🎯 [가산점 및 합격 전략]</b><br>1. <b>자립준비청년 1순위 특례 방어:</b> 보호종료 후 5년 이내 신청 시 1순위 자격 즉각 부여됨.<br>2. <b>타지역 출신 가점:</b> 부모의 주민등록지와 다른 지역(인천 등)에 거주/재학 중일 경우 가점 2점 획득.<br>3. <b>소득 통제:</b> 본인 소득 유무가 심사 대상이나, 근로장려금 수급 기준(단독가구 총소득 2,200만 원 미만) 수준으로 통제 시 유리함.</div>"
-        
     elif "매입임대" in house:
-        report += "<div class='info-box'><b>📑 [매입임대] 공고 확인 및 지원 가이드</b><br>▶ <b>공고 확인처:</b> LH청약플러스 앱 內 '임대주택 ➔ 청년/신혼부부 매입임대' 공고문.<br>▶ <b>공고 시기:</b> <b>매 분기별 정기공고 (3, 6, 9, 12월)</b>. 단, 미계약분 발생 시 매주 금요일 수시모집(줍줍) 공고 발생.</div>"
-        report += "<div class='gasan-box'><b>🎯 [가점 배점표 분석 및 획득 지시]</b><br>동일 1순위 내 경합 시 아래 배점표에 따라 당락이 결정됨. 철저한 사전 관리 요망.<br>1. <b>인천 연속 거주 기간 (최대 3점):</b> 주소지를 함부로 타 지역으로 옮기지 말고 인천 내 연속 거주(3년 이상) 요건을 방어할 것.<br>2. <b>주택청약 납입 횟수 (최대 3점):</b> 24회(2년) 이상 납입 시 만점(3점) 획득. 절대 해지 불가.<br>3. <b>소득 활동 (최대 2점):</b> 신청 시점 기준 재직증명서 발급 가능한 소득 활동 시 가점 산입.</div>"
-        report += "<div class='lh-secret'><b>💡 [LH 기밀 꿀팁] '관심지역 알리미' 및 상호전환</b><br>경쟁률이 수백 대 일에 달하므로, LH청약플러스 앱에서 '인천광역시' 관심지역 알림을 설정하여 수시모집 공고 알람을 확보할 것. 당첨 후 보증금을 100만 원 단위로 추가 납입(상호전환)하여 월 임대료를 6~10만 원 선으로 극한 통제 요망.</div>"
-        
+        report += "<div class='info-box'><b>📑 [매입임대] 공고 확인 및 지원 가이드</b><br>▶ <b>공고 확인처:</b> LH청약플러스 앱 內 '임대주택 ➔ 청년/신혼부부 매입임대' 공고문.<br>▶ <b>공고 시기:</b> <b>매 분기별 정기공고 (3, 6, 9, 12월)</b>. 미계약분 발생 시 매주 금요일 수시모집(줍줍) 공고 발생.</div>"
+        report += "<div class='gasan-box'><b>🎯 [가점 배점표 분석 및 획득 지시]</b><br>동일 1순위 내 경합 시 아래 배점표에 따라 당락이 결정됨. 철저한 사전 관리 요망.<br>1. <b>인천 연속 거주 기간 (최대 3점):</b> 주소지를 함부로 타 지역으로 옮기지 말고 인천 내 연속 거주(3년 이상) 요건 방어 지시.<br>2. <b>주택청약 납입 횟수 (최대 3점):</b> 24회(2년) 이상 납입 시 만점(3점) 획득. 절대 해지 불가.<br>3. <b>소득 활동 (최대 2점):</b> 신청 시점 기준 재직증명서 발급 가능한 소득 활동 시 가점 산입.</div>"
+        report += "<div class='lh-secret'><b>💡 [LH 기밀 꿀팁] '관심지역 알리미' 및 상호전환</b><br>LH청약플러스 앱에서 '인천광역시' 관심지역 알림 설정으로 수시모집 공고 선점 지시. 당첨 후 보증금을 100만 원 단위로 추가 납입(상호전환)하여 월 임대료를 극한 통제 요망.</div>"
     elif "건설임대" in house:
         report += "<div class='info-box'><b>📑 [건설임대: 행복/국민] 공고 확인 및 지원 가이드</b><br>▶ <b>공고 확인처:</b> LH청약플러스, 마이홈포털, iH(인천도시공사) 홈페이지 교차 확인.<br>▶ <b>공고 시기:</b> 신규 단지 준공 1년 전 모집 (수시), 또는 기존 단지 퇴거자 발생 시 '예비입주자 모집 공고' (반기별 정례화).</div>"
-        report += "<div class='gasan-box'><b>🎯 [가점 배점표 분석 및 획득 지시]</b><br>국민임대/행복주택은 서류 심사에서 아래 가점이 당락을 좌우함.<br>1. <b>중소기업 재직 가점:</b> 중소기업기본법에 따른 중소기업 근로 기간(최장 5년 이상 시 3점) 획득 요망.<br>2. <b>해당 지역 거주 기간 (최대 3점):</b> 인천광역시 거주 기간이 길수록 압도적 유리.<br>3. <b>청약저축 납입 (최대 6점):</b> 납입금액 무관, '연체 없는 납입 횟수(60회 이상 만점)'가 핵심 무기임.</div>"
-        
+        report += "<div class='gasan-box'><b>🎯 [가점 배점표 분석 및 획득 지시]</b><br>국민임대/행복주택 서류 심사에서 아래 가점이 당락을 좌우함.<br>1. <b>중소기업 재직 가점:</b> 중소기업기본법에 따른 중소기업 근로 기간(최장 5년 이상 시 3점) 획득 요망.<br>2. <b>해당 지역 거주 기간 (최대 3점):</b> 인천광역시 거주 기간 점수 최고점 확보 유지.<br>3. <b>청약저축 납입 (최대 6점):</b> 납입금액 무관, '연체 없는 납입 횟수(60회 이상 만점)' 방어 철저.</div>"
     elif "통합공공" in house:
-        report += f"<div class='info-box'><b>📑 [통합공공임대] 공고 확인 및 지원 가이드</b><br>▶ <b>공고 시기:</b> 2026년 이후 신규 택지구구(검단, 계양 등) 위주로 연중 수시 모집 공고 발령 예상.<br>▶ <b>면적 및 가점:</b> {fam} 맞춤형 면적 배정. 세대원 수가 많을수록, 맞벌이 부부일수록 우선공급 가점 배정에서 유리한 포지션 점유.</div>"
-        
+        report += f"<div class='info-box'><b>📑 [통합공공임대] 공고 확인 및 지원 가이드</b><br>▶ <b>공고 시기:</b> 신규 택지지구(검단, 계양 등) 위주 연중 수시 모집 공고 발령 예상.<br>▶ <b>면적 및 가점:</b> {fam} 맞춤형 면적 배정. 맞벌이 부부 및 다자녀일수록 우선공급 가점 배정 유리.</div>"
     elif "분양" in house:
-        report += "<div class='info-box'><b>📑 [공공분양: 뉴홈] 공고 확인 및 지원 가이드</b><br>▶ <b>공고 확인처:</b> 뉴홈 공식 홈페이지(뉴홈.kr) 사전청약 공고문 및 청약Home 앱.<br>▶ <b>공고 시기:</b> 국토부 연간 사전청약 공급 일정표에 따라 분기별(3, 6, 9, 12월) 공고.</div>"
-        report += "<div class='gasan-box'><b>🎯 [사전청약 당첨 및 DSR 관리 전략]</b><br>1. <b>납입 인정 금액 (절대 원칙):</b> 분양 당첨은 횟수가 아닌 '총 납입 인정 금액(매월 최대 10만 원까지만 인정)'으로 줄을 세움. 여력이 생기는 즉시 매월 10만 원으로 자동이체 상향 조정 필수.<br>2. <b>특공(특별공급) 공략:</b> 생애최초, 신혼, 다자녀 특별공급 물량 70% 타겟팅.<br>3. <b>DSR 무결점 방어:</b> 분양 당첨 후 정부 모기지 실행 시 대출 한도를 좌우함. 현금서비스 이력 원천 차단 및 1등급 신용 방어 요망.</div>"
+        report += "<div class='info-box'><b>📑 [공공분양: 뉴홈] 공고 확인 및 지원 가이드</b><br>▶ <b>공고 확인처:</b> 뉴홈 공식 홈페이지(뉴홈.kr) 사전청약 공고문 및 청약Home 앱.<br>▶ <b>공고 시기:</b> 국토부 연간 공급 일정표에 따른 분기별(3, 6, 9, 12월) 공고 집중.</div>"
+        report += "<div class='gasan-box'><b>🎯 [사전청약 당첨 및 DSR 관리 전략]</b><br>1. <b>납입 인정 금액 (절대 원칙):</b> 분양 당첨은 횟수가 아닌 '총 납입 인정 금액(월 최대 10만 원)' 기준임. 여력 발생 즉시 월 10만 원 자동이체 상향 조정 지시.<br>2. <b>특공 타겟팅:</b> 생애최초, 신혼, 다자녀 특별공급 물량 집중 공략.<br>3. <b>DSR 무결점 방어:</b> 분양 당첨 후 모기지 실행을 위한 신용등급 1등급 방어 요망. 현금서비스 이력 원천 차단.</div>"
 
     return report
 
@@ -103,12 +132,9 @@ if submit_btn:
     st.markdown(f'<div class="report-header">📑 [공식 진단서] {user_name} 청년 주거 및 가점 획득 로드맵</div>', unsafe_allow_html=True)
     st.write(f"**발급연도:** 2026년 | **발급기관:** 인천자립지원전담기관")
 
-    # 1. 현재 섹션
-    st.markdown(f'<div class="section-title">1. 현재 ({current_age}세) : 자립 출발선 진단</div>', unsafe_allow_html=True)
-    if now_sub == "미가입 또는 연체 중":
-        st.markdown('<div class="warning-box"><b>🚨 [긴급 행정명령] 청년주택드림청약통장 즉시 개설</b><br>건설임대 가점 및 공공분양 진입 불가 상태임. 명일 수탁은행 즉시 방문하여 계좌 개설 및 최소 2만 원 자동이체 강제 설정.</div>', unsafe_allow_html=True)
-    else:
-        st.markdown('<div class="info-box"><b>✅ [점검결과] 주택청약 유지 양호 (가점 확보 중)</b><br>현재 인천광역시 거주 기간과 함께 매월 납입 횟수가 곧 LH 배점표의 점수로 축적되고 있음. 해지 절대 금지.</div>', unsafe_allow_html=True)
+    # 1. 현재 섹션 (동적 분석 함수 호출)
+    st.markdown(f'<div class="section-title">1. 현재 ({current_age}세) : 주거 형태별 정밀 진단 및 지시</div>', unsafe_allow_html=True)
+    st.markdown(analyze_current_status(current_age, assets, now_house, now_sub), unsafe_allow_html=True)
     
     # 10년, 20년, 30년 후 출력
     st.markdown(f'<div class="section-title">2. 10년 후 ({current_age+10}세) 타겟 전형 및 가점 전략</div>', unsafe_allow_html=True)
@@ -120,5 +146,5 @@ if submit_btn:
     st.markdown(f'<div class="section-title">4. 30년 후 ({current_age+30}세) 최종 공공분양 및 자가 확보</div>', unsafe_allow_html=True)
     st.markdown(generate_lh_details(fam_30, house_30, sub_30), unsafe_allow_html=True)
     
-    st.markdown('<div class="info-box" style="background-color: #EAECEE; border-left: 6px solid #5D6D7E;"><b>📋 [담당 멘토 (김정현) 최종 행정 지시]</b><br>막연하게 공고를 기다리는 것은 탈락을 의미함. 위 명시된 각 전형별 <b>공고 발생 시기(분기별/상시)</b>를 메모하고, <b>LH 배점표 기준(인천 거주기간, 청약 횟수, 중소기업 재직 등)</b>을 선제적으로 충족하여 서류 심사 만점을 타겟팅할 것. 이를 기계적으로 이행할 경우 완벽한 주거 자립을 보장함.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="info-box" style="background-color: #EAECEE; border-left: 6px solid #5D6D7E;"><b>📋 [담당 멘토 (김정현) 최종 행정 지시]</b><br>현재 거주지 분석에 따른 긴급 조치 사항(주거 상향, 자산 축적 등)을 즉각 이행할 것. 막연한 공고 대기는 탈락을 의미함. 전형별 <b>공고 시기</b>를 모니터링하고, <b>LH 배점표 기준(인천 거주기간, 청약 횟수)</b>을 선제적으로 충족하여 서류 심사 만점을 타겟팅할 것. 이를 기계적으로 이행 시 완벽한 주거 자립을 보장함.</div>', unsafe_allow_html=True)
     st.divider()
