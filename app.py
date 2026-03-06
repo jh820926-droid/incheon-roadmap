@@ -324,7 +324,7 @@ if submit_btn:
             </p>
             <hr style="border: 1px dashed #1ABC9C; width: 60%; margin: 25px auto;">
             <div style="font-size: 1.3rem; font-weight: bold; color: #2C3E50;">
-                👤 담당자 올림
+                👤 담당자 김정현(070-7663-1153)
             </div>
         </div>
     """, unsafe_allow_html=True)
