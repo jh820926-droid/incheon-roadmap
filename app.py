@@ -1,5 +1,4 @@
 import streamlit as st
-import streamlit.components.v1 as components
 
 # 1. 앱 기본 설정
 st.set_page_config(page_title="2026 인천자립 주거로드맵", page_icon="🏠", layout="centered")
@@ -92,19 +91,19 @@ with st.form("lifecycle_form"):
     st.markdown("#### 🌱 [10년 후] 주거 목표")
     fam_10 = st.selectbox("10년 후에는 몇 명과 함께 살고 싶나요?", fam_options, index=0)
     house_10 = st.selectbox("어떤 형태의 집에서 살고 싶나요?", house_options, index=1)
-    sub_10 = st.checkbox("10년 후에도 청약 통장을 계속 유지할 예정이예요", value=True)
+    sub_10 = st.checkbox("10년 후에도 청약 통장을 계속 유지할 예정이에요", value=True)
 
     st.markdown("---")
     st.markdown("#### 🏡 [20년 후] 주거 목표")
     fam_20 = st.selectbox("20년 후에는 몇 명과 함께 살고 싶나요?", fam_options, index=1)
     house_20 = st.selectbox("어떤 형태의 집에서 살고 싶나요?", house_options, index=3)
-    sub_20 = st.checkbox("20년 후에도 청약 통장을 계속 유지할 예정이예요", value=True)
+    sub_20 = st.checkbox("20년 후에도 청약 통장을 계속 유지할 예정이에요", value=True)
 
     st.markdown("---")
     st.markdown("#### 🌅 [30년 후] 영구 자립 목표")
     fam_30 = st.selectbox("30년 후에는 몇 명과 함께 살고 싶나요?", fam_options, index=2)
     house_30 = st.selectbox("가장 마지막에 이루고 싶은 주거의 모습은요?", house_options, index=4)
-    sub_30 = st.checkbox("모아둔 청약 통장으로 공공분양에 도전할 예정이예요", value=True)
+    sub_30 = st.checkbox("모아둔 청약 통장으로 공공분양에 도전할 예정이에요", value=True)
 
     st.write("")
     submit_btn = st.form_submit_button("🚀 나만의 맞춤형 로드맵 리포트 만들기", type="primary")
@@ -174,7 +173,7 @@ def analyze_current(assets, now_house, now_sub):
         </ul>
         <div class='tip-box'>
         <b>💡 담당자의 다정한 꿀팁</b><br>
-        지금 당장 집을 구하지 않아도 된다면 자립준비청년 1순위 자격을 잘 아껴두세요. 나중에 확실하게 독립할 준비가 되었을 때, 이 막강한 1순위 카드를 활용해 LH 매입임대나 전세임대로 안전하고 편안하게 첫발을 내딛는 것을 권장해요.
+        지금 당장 집을 구하지 않아도 된다면 자립준비청년 1순위 자격을 잘 아껴두세요. 나중에 확실하게 독립할 준비가 되었을 때, 이 막강한 1순위 카드를 활용해 LH 매입임대나 전세임대로 안전하고 편안하게 첫발을 내딛는 것을 적극 권장해요.
         </div>
         </div>
         """
@@ -185,7 +184,7 @@ def analyze_current(assets, now_house, now_sub):
         개인적으로 집을 구해서 지내고 계시군요. 훌륭한 독립이지만, 매달 나가는 높은 월세나 전세 대출 이자는 우리가 자산을 모으는 데 가장 큰 부담이 될 수 있어요. 게다가 요즘은 전세사기 같은 위험도 무시할 수 없잖아요.<br><br>
         <div class='tip-box'>
         <b>💡 담당자의 다정한 꿀팁</b><br>
-        여러분에게는 일반인들보다 훨씬 유리하게, 보증금 100만 원 수준으로도 들어갈 수 있는 <b>'LH 자립준비청년 1순위 전형'</b>이라는 강력한 카드가 있어요! 비싼 월세로 돈이 새어나가지 않도록, 담당자와 함께 LH 주택으로 이사 갈 방법을 지금 당장 긍정적으로 검토해 보길 진심으로 추천해요.
+        여러분에게는 일반인들보다 훨씬 유리하게, 보증금 100만 원 수준으로도 들어갈 수 있는 <b>'LH 자립준비청년 1순위 전형'</b>이라는 강력한 카드가 있어요! 비싼 월세로 돈이 새어나가지 않도록, 담당자와 함께 LH 주택으로 이사 갈 방법을 긍정적으로 검토해 보길 진심으로 추천해요.
         </div>
         </div>
         """
@@ -196,7 +195,7 @@ def analyze_current(assets, now_house, now_sub):
         지금 지내는 곳이 많이 답답하거나 마음이 쓰이시죠? 무엇보다 여러분의 안전과 따뜻한 잠자리가 가장 중요해요. "내 힘으로 다 해결해야 해"라고 혼자 부담 갖지 마세요.<br><br>
         <div class='tip-box'>
         <b>💡 담당자의 다정한 꿀팁</b><br>
-        정부에는 <b>'주거취약계층 주거상향 지원사업'</b>이라는 아주 좋은 제도가 있어요. 고시원이나 여관 등에 거주하는 분들이 보증금 부담 없이 쾌적한 공공임대주택으로 이사할 수 있도록 이사비부터 생필품, 보증금까지 싹 다 지원해 주는 제도랍니다. 이 글을 읽으셨다면 망설이지 말고 꼭! 저에게(담당자) 연락해서 도움을 받아보세요.
+        정부에는 <b>'주거취약계층 주거상향 지원사업'</b>이라는 아주 좋은 제도가 있어요. 고시원이나 여관 등에 거주하는 분들이 보증금 부담 없이 쾌적한 공공임대주택으로 이사할 수 있도록 이사비부터 생필품, 보증금까지 싹 다 지원해 주는 제도랍니다. 이 글을 읽으셨다면 망설이지 말고 꼭 저에게(담당자) 연락해서 도움을 받아보세요.
         </div>
         </div>
         """
@@ -206,7 +205,7 @@ def analyze_current(assets, now_house, now_sub):
 def generate_future(age, fam, house, sub_status):
     report = f"<div class='card-box'>👨‍👩‍👧‍👦 <b>목표 가구 구성:</b> {fam}<br>🏡 <b>목표 주거 전형:</b> {house}</div>"
     
-    # 청약 유지 여부 피드백 (모든 미래 단계에 꼼꼼히 추가)
+    # 청약 유지 여부 피드백
     if not sub_status:
         report += """
         <div class='card-box'>
@@ -215,7 +214,6 @@ def generate_future(age, fam, house, sub_status):
         </div>
         """
 
-    # 1. 전세임대 (연령별 진화 + 꽉 찬 꿀팁)
     if "전세임대" in house:
         if age < 40:
             title = "🔎 청년/신혼부부 전세임대, 하나부터 열까지 알려줄게요!"
@@ -240,7 +238,6 @@ def generate_future(age, fam, house, sub_status):
         </div>
         """
         
-    # 2. 매입임대 (연령별 진화 + 꽉 찬 꿀팁)
     elif "매입임대" in house:
         if age < 40:
             title = "🔎 청년/신혼부부 매입임대, 하나부터 열까지 알려줄게요!"
@@ -264,7 +261,6 @@ def generate_future(age, fam, house, sub_status):
         </div>
         """
         
-    # 3. 건설임대 (연령별 진화 + 꽉 찬 꿀팁)
     elif "건설임대" in house:
         if age < 40:
             title = "🔎 행복주택/국민임대 아파트, 하나부터 열까지 알려줄게요!"
@@ -277,7 +273,7 @@ def generate_future(age, fam, house, sub_status):
         <div class='card-box'>
             <b>{title}</b><br>{desc}<br><br>
             <ul class='step-list'>
-                <li><b>가구원 수에 따른 면적 제한:</b> 아주 중요한 부분이에요! 혼자 사는 1인 가구는 전용면적 40㎡ 이하의 소형 평수만 지원할 수 있어요. 넓은 평수에 무작정 지원하면 서류에서 바로 탈락하니 꼭 {fam} 기준에 맞는 평수를 지원하세요.</li>
+                <li><b>가구원 수에 따른 면적 제한:</b> 아주 중요한 부분이에요! 혼자 사는 1인 가구는 전용면적 40㎡ 이하의 소형 평수만 지원할 수 있어요. 넓은 평수에 무작정 지원하면 서류에서 탈락하니 꼭 {fam} 기준에 맞는 평수를 지원하세요.</li>
             </ul>
             <div class='tip-box'>
             <b>💡 담당자가 알려주는 '배점표' 만점 꿀팁</b><br>
@@ -288,7 +284,6 @@ def generate_future(age, fam, house, sub_status):
         </div>
         """
         
-    # 4. 통합공공 (연령별 진화 + 꽉 찬 꿀팁)
     elif "통합공공" in house:
         if age < 40:
             title = "🔎 통합공공임대, 첫 입주를 노려봐요!"
@@ -310,7 +305,6 @@ def generate_future(age, fam, house, sub_status):
         </div>
         """
         
-    # 5. 분양 (연령별 진화 + 꽉 찬 꿀팁)
     elif "분양" in house:
         if age < 40:
             title = "🔎 공공분양(뉴홈), 첫 내 집 마련의 꿈을 이루는 법!"
@@ -328,13 +322,13 @@ def generate_future(age, fam, house, sub_status):
             <div class='tip-box'>
             <b>💡 담당자가 알려주는 분양 당첨과 신용관리(DSR) 꿀팁</b><br>
             1. <b>청약 통장 인정 금액:</b> 분양 당첨은 횟수가 아니라 통장에 <b>'매월 최대 10만 원씩 인정받은 총 금액'</b>이 많은 순서대로 뽑아요. 경제적 여유가 생기는 순간, 청약 자동이체를 월 10만 원으로 올려두는 것이 좋아요.<br>
-            2. <b>신용점수 철통 방어:</b> 당첨이 끝이 아니에요! 집값의 80%를 빌려주는 정부의 아주 싼 대출(모기지)을 받으려면 신용점수가 매우 좋아야 해요. <b>신용카드 현금서비스, 리볼빙, 잦은 카드론 사용</b>은 대출 심사(DSR)에서 치명적이니 20대부터 신용 관리에 꼭 신경 써주세요!
+            2. <b>신용점수 철통 방어:</b> 당첨 후 집값의 최대 80%를 빌려주는 싼 대출(모기지)을 받으려면 신용점수가 좋아야 해요. <b>신용카드 현금서비스, 리볼빙, 잦은 카드론 사용</b>은 대출 심사(DSR)에서 치명적이니 20대부터 신용 관리에 꼭 신경 써주세요!
             </div>
         </div>
         """
     return report
 
-# 4. 리포트 출력 및 PDF 버튼
+# 5. 리포트 출력 
 if submit_btn:
     st.markdown('<div class="report-header">📑 나만을 위한 맞춤형 30년 주거 로드맵</div>', unsafe_allow_html=True)
 
@@ -384,24 +378,7 @@ if submit_btn:
             </p>
             <hr style="border: 1px dashed #1ABC9C; width: 60%; margin: 25px auto;">
             <div style="font-size: 1.3rem; font-weight: bold; color: #2C3E50;">
-                👤 담당자 김정현(070-7663-1153)
+                👤 담당자 김정현 (070-7663-1153)
             </div>
         </div>
     """, unsafe_allow_html=True)
-
-    # PDF 버튼 영역 (인쇄 시 이 부분은 CSS에 의해 완벽하게 숨겨집니다)
-    st.markdown("---")
-    components.html(
-        """
-        <div style="text-align: center; font-family: sans-serif; padding: 20px;">
-            <button onclick="window.parent.print()" style="padding: 18px 40px; font-size: 18px; font-weight: bold; background-color: #2E86C1; color: white; border: none; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.15); transition: all 0.3s ease;">
-                🖨️ 이 맞춤형 리포트를 PDF로 깔끔하게 저장하기
-            </button>
-            <p style="color: #7F8C8D; font-size: 14px; margin-top: 15px;">
-                버튼을 누른 후 인쇄 화면이 뜨면, 대상(프린터)을 <b>[PDF로 저장]</b>으로 변경해 주세요.<br>
-                (입력창은 전부 사라지고, 리포트 결과만 각 연령대별로 1장씩 예쁘게 분할되어 저장됩니다!)
-            </p>
-        </div>
-        """,
-        height=180
-    )
