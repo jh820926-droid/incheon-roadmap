@@ -1,9 +1,10 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
 # 1. 앱 기본 설정
 st.set_page_config(page_title="2026 인천자립 주거로드맵", page_icon="🏠", layout="centered")
 
-# CSS 스타일링 (가독성 및 🖨️ PDF 인쇄 시 완벽 제어)
+# CSS 스타일링 (가독성 및 🖨️ PDF 전체 페이지 인쇄 완벽 제어)
 st.markdown("""
     <style>
     .main-title { font-size: 2.2rem; color: #2C3E50; font-weight: 900; text-align: center; margin-bottom: 5px;}
@@ -14,28 +15,29 @@ st.markdown("""
     .tip-box { background-color: #F9E79F; padding: 20px; border-radius: 8px; border-left: 6px solid #F1C40F; margin-top: 15px; margin-bottom: 15px; color: #4D5656; font-size: 0.95rem; line-height: 1.7;}
     .step-list { margin-left: 20px; margin-bottom: 15px; }
     
-    /* 🖨️ PDF 인쇄를 위한 마법의 CSS */
+    /* 🖨️ PDF 전체 화면 인쇄를 위한 마법의 CSS */
     @media print {
-        /* 스트림릿 입력 폼, 사이드바, 헤더, 버튼 등 인쇄 시 불필요한 모든 것 숨기기 */
+        /* 1. 인쇄 시 불필요한 모든 것 숨기기 */
         header, footer, [data-testid="stSidebar"], [data-testid="stForm"], button { display: none !important; }
-        
-        /* 맨 위 앱 제목 숨기기 (리포트 제목부터 나오게 함) */
         .main-title, .sub-title, img, hr { display: none !important; }
         
-        /* 페이지 나눔(Page Break) 강제 적용을 위해 flex 해제 */
-        .stApp, .stMainBlockContainer, [data-testid="stVerticalBlock"] {
-            display: block !important;
+        /* 2. 🌟 핵심: 스크롤을 해제하고 전체 내용을 길게 쫙 펼침 🌟 */
+        html, body, .stApp, [data-testid="stAppViewContainer"], [data-testid="stMainBlockContainer"], .main {
+            height: auto !important;
+            overflow: visible !important;
+            position: static !important;
             background-color: white !important;
         }
         
-        /* 각 단계별로 무조건 새로운 A4 용지로 넘기기 */
+        /* 3. 각 단계별로 무조건 새로운 A4 용지로 넘기기 */
         .page-break {
             page-break-before: always !important;
             display: block !important;
             height: 0px !important;
+            border: none !important;
         }
         
-        /* 인쇄할 때 배경색과 테두리가 투명해지는 현상 방지 */
+        /* 4. 인쇄할 때 배경색(노란 박스 등)이 투명해지는 현상 방지 */
         * {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
@@ -141,7 +143,7 @@ def analyze_current(assets, now_house, now_sub):
         현재 살고 계신 전형은 만 20세까지 나라에서 전세지원금에 대한 이자를 전액 면제해 주는 최고의 혜택을 가지고 있어요. 주거비 걱정 없이 학업이나 일에 집중할 수 있는 아주 소중한 시기랍니다.<br><br>
         <ul class='step-list'>
             <li><b>주의할 점:</b> 만 22세 이후부터는 전세금에 대한 소정의 임대료(이자, 약 1~2% 수준)를 매달 납부해야 해요.</li>
-            <li><b>준비할 점:</b> 주거비가 전혀 나가지 않는 지금 시기에, 나중에 낼 이자나 독립 자금을 위해 매월 10~20만 원씩은 꼭 없는 돈이라 생각하고 저축해 두는 것을 강력히 추천해요.</li>
+            <li><b>준비할 점:</b> 주거비가 전혀 나가지 않는 지금 시기에, 나중에 낼 이자나 독립 자금을 위해 매월 10~20만 원씩은 꼭 저축해 두는 것을 강력히 추천해요.</li>
         </ul>
         <div class='tip-box'>
         <b>💡 담당자의 다정한 꿀팁</b><br>
@@ -159,7 +161,7 @@ def analyze_current(assets, now_house, now_sub):
         </ul>
         <div class='tip-box'>
         <b>💡 담당자의 다정한 꿀팁 (상호전환제도)</b><br>
-        LH에는 <b>'전환보증금 제도'</b>라는 마법 같은 제도가 있어요. 여유 자금을 보증금으로 추가 납부하면, 무려 연 6~7%의 이율로 계산해서 매월 내는 월세를 확 깎아준답니다. 은행 예금 이자보다 훨씬 높으니, 현재 모아두신 {assets}만 원이나 목돈이 생길 때마다 보증금으로 전환해서 월세를 '치킨 한 마리 값'으로 만들어 보세요!
+        LH에는 <b>'전환보증금 제도'</b>라는 마법 같은 제도가 있어요. 여유 자금을 보증금으로 추가 납부하면, 무려 연 6~7%의 이율로 계산해서 매월 내는 월세를 확 깎아준답니다. 현재 모아두신 {assets}만 원이나 목돈이 생길 때마다 보증금으로 전환해서 월세를 '치킨 한 마리 값'으로 만들어 보세요!
         </div>
         </div>
         """
@@ -192,25 +194,24 @@ def analyze_current(assets, now_house, now_sub):
         report += """
         <div class='card-box'>
         🏠 <b>현재 주거 상황: 고시원 등 주거취약계층 거주 중</b><br>
-        지금 지내는 곳이 많이 답답하거나 마음이 쓰이시죠? 무엇보다 여러분의 안전과 따뜻한 잠자리가 가장 중요해요. "내 힘으로 다 해결해야 해"라고 혼자 부담 갖지 마세요.<br><br>
+        지금 지내는 곳이 많이 답답하거나 마음이 쓰이시죠? 무엇보다 여러분의 안전과 따뜻한 잠자리가 가장 중요해요. 혼자서 다 해결해야 한다고 부담 갖지 마세요.<br><br>
         <div class='tip-box'>
         <b>💡 담당자의 다정한 꿀팁</b><br>
-        정부에는 <b>'주거취약계층 주거상향 지원사업'</b>이라는 아주 좋은 제도가 있어요. 고시원이나 여관 등에 거주하는 분들이 보증금 부담 없이 쾌적한 공공임대주택으로 이사할 수 있도록 이사비부터 생필품, 보증금까지 싹 다 지원해 주는 제도랍니다. 이 글을 읽으셨다면 망설이지 말고 꼭 저에게(담당자) 연락해서 도움을 받아보세요.
+        정부에는 <b>'주거취약계층 주거상향 지원사업'</b>이라는 아주 좋은 제도가 있어요. 고시원이나 여관 등에 거주하는 분들이 보증금 부담 없이 쾌적한 공공임대주택으로 이사할 수 있도록 이사비부터 생필품, 보증금까지 싹 다 지원해 주는 제도랍니다. 망설이지 말고 꼭 담당자에게 연락해서 도움을 받아보세요.
         </div>
         </div>
         """
     return report
 
-# 연령과 가족구성에 따라 내용과 디테일이 진화하는 미래 알고리즘
+# 4. 분석 알고리즘 (미래 로드맵)
 def generate_future(age, fam, house, sub_status):
     report = f"<div class='card-box'>👨‍👩‍👧‍👦 <b>목표 가구 구성:</b> {fam}<br>🏡 <b>목표 주거 전형:</b> {house}</div>"
     
-    # 청약 유지 여부 피드백
     if not sub_status:
         report += """
         <div class='card-box'>
         🏦 <b>앗, 청약 납입을 쉬기로 하셨군요!</b><br>
-        살다 보면 경제적으로 힘든 시기가 와서 잠시 납입을 멈출 수는 있어요. 하지만 청약 통장의 점수가 멈춰버리면 아파트(건설임대)나 내 집 마련(분양) 경쟁에서 순위가 뒤로 밀릴 수 있답니다. 여유가 조금이라도 생기면 다시 꼭 월 2만 원씩이라도 이어나가 보기를 다정하게 권유해 드려요!
+        살다 보면 경제적으로 힘든 시기가 와서 잠시 멈출 수는 있어요. 하지만 청약 통장의 점수가 멈춰버리면 아파트(건설임대)나 내 집 마련(분양) 경쟁에서 순위가 뒤로 밀릴 수 있답니다. 여유가 조금이라도 생기면 다시 꼭 월 2만 원씩이라도 이어나가 보기를 다정하게 권유해 드려요!
         </div>
         """
 
@@ -231,9 +232,7 @@ def generate_future(age, fam, house, sub_status):
             </ul>
             <div class='tip-box'>
             <b>💡 담당자가 알려주는 권리분석(안전한 집 찾기) 꿀팁</b><br>
-            LH는 여러분의 보증금을 지키기 위해 아주 깐깐한 심사를 해요. 집주인이 빚이 많으면 심사에서 탈락시킵니다. 이걸 '권리분석'이라고 해요.<br>
-            👉 <b>(집주인 빚 + 내 보증금)이 주택 가격의 90%를 넘으면 안 돼요!</b><br>
-            부동산에 가서 집을 찾을 때 처음부터 당당하게 말씀하세요. <i>"사장님, 저 LH 전세임대로 구하고 있어요. 부채비율 90% 이하로 권리분석 무조건 통과할 수 있는 융자 없는 깨끗한 집만 보여주세요!"</i> 이렇게 말하면 헛걸음하는 시간을 확 줄일 수 있답니다.
+            LH는 여러분의 보증금을 지키기 위해 깐깐한 심사를 해요. <b>(집주인 빚 + 내 보증금)이 주택 가격의 90%를 넘으면 안 돼요!</b> 부동산에 가서 집을 찾을 때 <i>'LH 전세 부채비율 90% 이하로 권리분석 통과할 수 있는 안전한 집만 보여주세요'</i>라고 미리 말씀해 보세요. 헛걸음하는 시간을 확 줄일 수 있답니다.
             </div>
         </div>
         """
@@ -255,8 +254,7 @@ def generate_future(age, fam, house, sub_status):
             </ul>
             <div class='tip-box'>
             <b>💡 담당자가 알려주는 '관심지역 알림'과 '줍줍' 꿀팁</b><br>
-            매입임대는 인기가 많지만 계약을 포기하는 사람들이 생겨서 남는 집이 꼭 나옵니다. 이걸 '수시모집(줍줍)'이라고 부르는데 주로 금요일에 조용히 올라와요.<br>
-            👉 <b>스마트폰에 'LH청약플러스' 앱을 깔고 마이페이지에서 [관심지역 알림]을 '인천광역시'로 꼭 켜두세요!</b> 남들보다 빠르게 빈집 정보를 낚아챌 수 있는 최고의 비법이랍니다.
+            계약을 포기하는 사람들이 생겨서 남는 집이 꼭 나옵니다. '수시모집(줍줍)'이라고 부르는데 주로 금요일에 조용히 올라와요. <b>스마트폰에 'LH청약플러스' 앱을 깔고 마이페이지에서 [관심지역 알림]을 '인천광역시'로 꼭 켜두세요!</b> 남들보다 빠르게 빈집 정보를 낚아챌 수 있는 최고의 비법이랍니다.
             </div>
         </div>
         """
@@ -264,22 +262,20 @@ def generate_future(age, fam, house, sub_status):
     elif "건설임대" in house:
         if age < 40:
             title = "🔎 행복주택/국민임대 아파트, 하나부터 열까지 알려줄게요!"
-            desc = "새로 지어지는 깨끗한 단지형 아파트에 입주할 수 있어요. 경비실도 있고 단지 내 헬스장이나 도서관도 있어서 생활이 아주 쾌적해져요."
+            desc = "새로 지어지는 깨끗한 단지형 아파트에 입주할 수 있어요. 단지 내 헬스장이나 도서관도 있어서 생활이 아주 쾌적해져요."
         else:
             title = "🔎 국민임대/영구임대 아파트, 장기 거주를 준비해 봐요!"
-            desc = f"{age}세 이후에는 이사를 자주 다니기보다 정착하는 것이 중요하죠. 소득 요건만 유지한다면 국민임대 아파트에서 최장 30년까지 마음 편히 거주할 수 있는 아주 든든한 전형이에요."
+            desc = f"{age}세 이후에는 이사를 자주 다니기보다 정착하는 것이 중요하죠. 소득 요건만 유지한다면 최장 30년까지 마음 편히 거주할 수 있는 아주 든든한 전형이에요."
 
         report += f"""
         <div class='card-box'>
             <b>{title}</b><br>{desc}<br><br>
             <ul class='step-list'>
-                <li><b>가구원 수에 따른 면적 제한:</b> 아주 중요한 부분이에요! 혼자 사는 1인 가구는 전용면적 40㎡ 이하의 소형 평수만 지원할 수 있어요. 넓은 평수에 무작정 지원하면 서류에서 탈락하니 꼭 {fam} 기준에 맞는 평수를 지원하세요.</li>
+                <li><b>가구원 수에 따른 면적 제한:</b> 혼자 사는 1인 가구는 전용면적 40㎡ 이하의 소형 평수만 지원할 수 있어요. 넓은 평수에 무작정 지원하면 서류에서 탈락하니 꼭 {fam} 기준에 맞는 평수를 지원하세요.</li>
             </ul>
             <div class='tip-box'>
             <b>💡 담당자가 알려주는 '배점표' 만점 꿀팁</b><br>
-            아파트는 1순위 안에서도 점수(배점)로 줄을 세워요. 여기서 이기는 두 가지 핵심 무기를 알려드릴게요.<br>
-            1. <b>해당 지역 거주 기간:</b> 인천광역시에 주소지를 두고 오래 살수록 유리해요. (타 지역으로 전입신고를 맘대로 옮기면 점수가 깎일 수 있어요!)<br>
-            2. <b>청약 통장 납입 횟수:</b> 돈의 액수보다 '얼마나 연체 없이 매월 꾸준히 냈는지'가 중요해요. 60회 이상 꾸준히 내면 여기서 최고점을 받을 수 있어요.
+            아파트는 점수(배점)로 줄을 세워요. <b>1. 인천에 얼마나 오래 살았는지 (전입신고 유지)</b>, <b>2. 청약 통장에 연체 없이 꾸준히 돈을 넣은 횟수</b>가 당첨을 결정짓는 가장 강력한 무기가 된답니다. 60회 이상 꾸준히 내면 최고점을 받을 수 있어요.
             </div>
         </div>
         """
@@ -287,7 +283,7 @@ def generate_future(age, fam, house, sub_status):
     elif "통합공공" in house:
         if age < 40:
             title = "🔎 통합공공임대, 첫 입주를 노려봐요!"
-            desc = "기존의 복잡했던 여러 임대주택 제도를 하나로 합친 2026년 최신 버전의 주거복지 끝판왕 제도예요. 신혼부부나 신생아 출산 특별공급을 활용하면 아주 유리하게 첫 입주를 할 수 있어요."
+            desc = "기존의 복잡했던 여러 임대주택 제도를 하나로 합친 주거복지 끝판왕 제도예요. 신혼부부나 신생아 출산 특별공급을 활용하면 아주 유리하게 첫 입주를 할 수 있어요."
         else:
             title = "🔎 통합공공임대, 30년 안심 거주를 누려봐요!"
             desc = f"{age}세 시점에는 소득이 예전보다 올랐을 수 있어요. 이 전형은 내 월급이 오르더라도 쫓겨나지 않고, 소득에 맞춰 임대료만 조금 더 내며 30년 동안 이사 안 가고 살 수 있는 최고의 방패랍니다."
@@ -308,7 +304,7 @@ def generate_future(age, fam, house, sub_status):
     elif "분양" in house:
         if age < 40:
             title = "🔎 공공분양(뉴홈), 첫 내 집 마련의 꿈을 이루는 법!"
-            desc = "LH의 '뉴홈' 브랜드를 통해 주변 아파트 시세의 70% 수준으로 저렴하게 새 아파트를 가질 수 있는 절호의 기회랍니다."
+            desc = "주변 아파트 시세의 70% 수준으로 저렴하게 새 아파트를 가질 수 있는 절호의 기회랍니다."
         else:
             title = "🔎 공공분양, 완전하고 영구적인 내 집을 가져봐요!"
             desc = f"{age}세까지 차곡차곡 모아둔 청약 통장의 힘을 폭발시킬 때예요! 그동안 쌓인 납입 인정 금액으로 일반공급에 당당히 도전하거나, 특별공급을 통해 온전한 내 집을 마련해 볼 수 있어요."
@@ -317,12 +313,12 @@ def generate_future(age, fam, house, sub_status):
         <div class='card-box'>
             <b>{title}</b><br>{desc}<br><br>
             <ul class='step-list'>
-                <li><b>특별공급(특공) 공략:</b> 일반 사람들과 경쟁하기엔 너무 치열해요. 우리는 {fam} 상황에 맞춰 <b>'생애최초 특공', '신혼부부 특공', '다자녀 특공'</b>이라는 마법의 문을 두드릴 거예요. 전체 분양 물량의 무려 70%가 특공에 배정된답니다!</li>
+                <li><b>특별공급(특공) 공략:</b> 일반 사람들과 경쟁하기엔 너무 치열해요. 우리는 {fam} 상황에 맞춰 <b>'생애최초 특공', '신혼부부 특공', '다자녀 특공'</b>이라는 마법의 문을 두드릴 거예요. 전체 물량의 70%가 특공에 배정된답니다!</li>
             </ul>
             <div class='tip-box'>
             <b>💡 담당자가 알려주는 분양 당첨과 신용관리(DSR) 꿀팁</b><br>
-            1. <b>청약 통장 인정 금액:</b> 분양 당첨은 횟수가 아니라 통장에 <b>'매월 최대 10만 원씩 인정받은 총 금액'</b>이 많은 순서대로 뽑아요. 경제적 여유가 생기는 순간, 청약 자동이체를 월 10만 원으로 올려두는 것이 좋아요.<br>
-            2. <b>신용점수 철통 방어:</b> 당첨 후 집값의 최대 80%를 빌려주는 싼 대출(모기지)을 받으려면 신용점수가 좋아야 해요. <b>신용카드 현금서비스, 리볼빙, 잦은 카드론 사용</b>은 대출 심사(DSR)에서 치명적이니 20대부터 신용 관리에 꼭 신경 써주세요!
+            1. <b>청약 통장 인정 금액:</b> 분양 당첨은 횟수가 아니라 <b>'매월 최대 10만 원씩 인정받은 총 금액'</b>이 많은 순서대로 뽑아요. 경제적 여유가 생기면 꼭 월 10만 원으로 자동이체를 맞춰두세요.<br>
+            2. <b>신용점수 철통 방어:</b> 당첨 후 집값의 80%를 빌려주는 싼 대출(모기지)을 받으려면 신용점수가 좋아야 해요. 잦은 현금서비스나 리볼빙은 치명적이니 신용 관리를 꼼꼼히 해주세요.
             </div>
         </div>
         """
@@ -332,26 +328,26 @@ def generate_future(age, fam, house, sub_status):
 if submit_btn:
     st.markdown('<div class="report-header">📑 나만을 위한 맞춤형 30년 주거 로드맵</div>', unsafe_allow_html=True)
 
-    # 섹션 1 (현재) - 이 내용부터 인쇄 1페이지 시작
+    # 섹션 1 (현재) - PDF 1페이지
     st.markdown(f'<div class="section-title">1. 현재 ({current_age}세) : 나의 출발선 튼튼하게 다지기</div>', unsafe_allow_html=True)
     st.markdown(analyze_current(assets, now_house, now_sub), unsafe_allow_html=True)
     
-    # 섹션 2 (10년 후) - 여기서부터 PDF 2페이지로 넘어감
+    # 섹션 2 (10년 후) - PDF 2페이지
     st.markdown('<div class="page-break"></div>', unsafe_allow_html=True)
     st.markdown(f'<div class="section-title">2. 10년 후 ({current_age+10}세) 주거 계획 및 실전 꿀팁</div>', unsafe_allow_html=True)
     st.markdown(generate_future(current_age+10, fam_10, house_10, sub_10), unsafe_allow_html=True)
 
-    # 섹션 3 (20년 후) - 여기서부터 PDF 3페이지로 넘어감
+    # 섹션 3 (20년 후) - PDF 3페이지
     st.markdown('<div class="page-break"></div>', unsafe_allow_html=True)
     st.markdown(f'<div class="section-title">3. 20년 후 ({current_age+20}세) 주거 계획 및 실전 꿀팁</div>', unsafe_allow_html=True)
     st.markdown(generate_future(current_age+20, fam_20, house_20, sub_20), unsafe_allow_html=True)
 
-    # 섹션 4 (30년 후) - 여기서부터 PDF 4페이지로 넘어감
+    # 섹션 4 (30년 후) - PDF 4페이지
     st.markdown('<div class="page-break"></div>', unsafe_allow_html=True)
     st.markdown(f'<div class="section-title">4. 30년 후 ({current_age+30}세) 영구적인 주거 자립 달성</div>', unsafe_allow_html=True)
     st.markdown(generate_future(current_age+30, fam_30, house_30, sub_30), unsafe_allow_html=True)
     
-    # 섹션 5 & 6 (도움망 및 편지) - 여기서부터 PDF 5페이지 (마지막 장)
+    # 섹션 5 & 6 (도움망) - PDF 5페이지
     st.markdown('<div class="page-break"></div>', unsafe_allow_html=True)
     st.markdown('<div class="section-title">5. 든든한 주거복지 정보망 (즐겨찾기 필수 사이트)</div>', unsafe_allow_html=True)
     st.markdown("""
